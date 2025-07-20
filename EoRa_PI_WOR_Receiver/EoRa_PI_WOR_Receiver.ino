@@ -1,14 +1,22 @@
 /*
-   v6 Fixed LoRa Receiver - Based on working Ebyte "utilites.h" pin assignments.
-   Coded by Claude with prompting by William Lucid and Ebyte provided example for
-   EoRa PI (Ebyte EoRa-S3-900TB dev board) Example:  "SX1262_Transmit_Interrupt".
+   Based on Ebyte "utilites.h" pin assignments.  Coded by Claude with 
+   prompting by William Lucid and Working Ebyte example for EoRa PI 
+   (Ebyte EoRa-S3-900TB dev board)  "SX1262_Transmit_Interrupt".
       
-   100% Working!!!  07/18/2025 @ 12:32 EDT
+   "EoRa_PI_WOR_Receiver_with_Functions.ino"   07/20/2025 @ 10:53 EDT
+   Remote Receiver --Battery Powered
+
+   Code building path:  "H:\EoRa PI Project\EoRa_Ra_PI_Remote_Switch\EoRa_Ra_PI_Remote_Switch.ino"
 */
 
 #include <RadioLib.h>
 #define EoRa_PI_V1
 #include "boards.h"
+
+#include <LittleFS.h>
+#include <INA226_WE.h>
+#include <Wire.h>
+#include <Ticker.h>
 
 #define USING_SX1262_868M
 
@@ -44,10 +52,220 @@ void setFlag(void)
     receivedFlag = true;
 }
 
+//---------------- Added definitions ------------
+
+// --- Timer Setup ---
+Ticker twoMinuteTicker;
+
+String timestamp = "";
+
+// --- Task Definitions ---
+enum TaskOption {
+  TASK_NONE = 0,
+  TASK_MEASURE_POWER = 1,   // Triggered by LoRa
+  TASK_TRIGGER_SENSOR = 2   // Triggered by timer
+};
+
+#define INA_SDA 15
+#define INA_SCL 16
+
+TwoWire I2C_1 = TwoWire(1);
+
+
+#define INA226_ADDRESS 0x40
+
+INA226_WE ina226(&I2C_1, INA226_ADDRESS);
+
+#define TRIGGER    45     //KY002S MOSFET Bi-Stable Switch
+#define KY002S_PIN 46  //KY002S MOSFET Bi-Stable Switch --Read output
+#define ALERT      19        //INA226 Battery Monitor
+
+// Global variables for missing declarations
+volatile bool alertFlag = false;
+int activationCount = 0;
+
+// Forward declarations
+void readINA226(const char* dtStamp);
+void triggerKY002S();
+
+// Alert interrupt handler
+void alert() {
+    alertFlag = true;
+}
+
+void dispatchTask(int taskCode, String(timestamp)) {
+#ifdef LOG_ON
+    Serial.println("--- DISPATCHING TASK ---");
+    Serial.print("Task Code: ");
+    Serial.println(taskCode);
+#endif
+  
+    switch (taskCode) {
+        case TASK_MEASURE_POWER:
+            //Toggle Switch
+            triggerKY002S();
+            Serial.println("Turned on Switch");
+            //Get Data and Log INA226
+            readINA226(timestamp); // Pass a timestamp string
+            //Start Two Minute Timer
+            break;
+        case TASK_TRIGGER_SENSOR:
+            triggerKY002S();
+            break;
+        default:
+#ifdef LOG_ON
+            Serial.println("Unknown task");
+#endif
+            break;
+    }
+}
+
+void parseString(String str) {
+    Serial.print("Received String: ");
+    Serial.println(str);
+    Serial.flush();
+
+    int delimiterIndex = str.indexOf(',');
+    if (delimiterIndex != -1) {
+        int taskCode = str.substring(0, delimiterIndex).toInt();
+        String timestamp = str.substring(delimiterIndex + 1);
+        
+        // Pass both taskCode and timestamp
+        dispatchTask(taskCode, timestamp);
+
+        Serial.println("Parsed Task: " + String(taskCode));
+        Serial.println("Timestamp: " + timestamp);
+        Serial.flush();
+    }
+}
+
+void checkForI2cErrors() {
+    byte errorCode = ina226.getI2cErrorCode();
+    if (errorCode) {
+        Serial.print("I2C error: ");
+        Serial.println(errorCode);
+        switch (errorCode) {
+            case 1:
+                Serial.println("Data too long to fit in transmit buffer");
+                break;
+            case 2:
+                Serial.println("Received NACK on transmit of address");
+                break;
+            case 3:
+                Serial.println("Received NACK on transmit of data");
+                break;
+            case 4:
+                Serial.println("Other error");
+                break;
+            case 5:
+                Serial.println("Timeout");
+                break;
+            default:
+                Serial.println("Can't identify the error");
+        }
+        if (errorCode) {
+            while (1) {}
+        }
+    }
+}
+
+void readINA226(const char* dtStamp) {
+    float shuntVoltage_mV = 0.0;
+    float loadVoltage_V = 0.0;
+    float busVoltage_V = 0.0;
+    float current_mA = 0.0;
+    float power_mW = 0.0;
+    
+    ina226.startSingleMeasurement();
+    ina226.readAndClearFlags();
+    shuntVoltage_mV = ina226.getShuntVoltage_mV();
+    busVoltage_V = ina226.getBusVoltage_V();
+    current_mA = ina226.getCurrent_mA();
+    power_mW = ina226.getBusPower();
+    loadVoltage_V = busVoltage_V + (shuntVoltage_mV / 1000);
+    checkForI2cErrors();
+
+    Serial.println(dtStamp);
+    Serial.print("Shunt Voltage [mV]: ");
+    Serial.println(shuntVoltage_mV);
+    Serial.print("Bus Voltage [V]: ");
+    Serial.println(busVoltage_V);
+    Serial.print("Load Voltage [V]: ");
+    Serial.println(loadVoltage_V);
+    Serial.print("Current[mA]: ");
+    Serial.println(current_mA);
+    Serial.print("Bus Power [mW]: ");
+    Serial.println(power_mW);
+
+    if (!ina226.overflow) {
+        Serial.println("Values OK - no overflow");
+    } else {
+        Serial.println("Overflow! Choose higher current range");
+    }
+    Serial.println();
+
+    // Open a "log.txt" for appended writing
+    File log = LittleFS.open("/log.txt", "a");
+
+    if (!log) {
+        Serial.println("file 'log.txt' open failed");
+        return; // Exit if file cannot be opened
+    }
+
+    log.print(dtStamp);
+    log.print(" , ");
+    log.print(activationCount);
+    log.print(" , ");
+    log.print(shuntVoltage_mV, 3);
+    log.print(" , ");
+    log.print(busVoltage_V, 3);
+    log.print(" , ");
+    log.print(loadVoltage_V, 3);
+    log.print(" , ");
+    log.print(current_mA, 3);
+    log.print(" , ");
+    log.print(power_mW, 3);
+    log.print(" , ");
+    if (alertFlag) {
+        log.print("Under Voltage alert");
+        alertFlag = false;
+    }
+    log.println("");
+    log.close();
+    
+    activationCount++; // Increment activation count
+}
+
+void triggerKY002S() {
+    digitalWrite(TRIGGER, LOW);
+    delay(100);
+    digitalWrite(TRIGGER, HIGH);
+}
+
 void setup()
 {
     Serial.begin(115200);
-    
+    while(!Serial){};
+
+    I2C_1.begin(INA_SDA, INA_SCL, 100000);
+    // INA226 init here using I2C_1
+
+    bool fsok = LittleFS.begin(true);
+    Serial.printf_P(PSTR("FS init: %s\n"), fsok ? PSTR("ok") : PSTR("fail!"));
+
+    pinMode(TRIGGER, OUTPUT);        // ESP32S3, GPIO45
+    pinMode(KY002S_PIN, INPUT);      //ESP32S3, GPIO46
+    pinMode(ALERT, INPUT);           // ESP32S3, GPIO41
+
+    int value = digitalRead(KY002S_PIN);  //KY002S, Vo pin
+    if (value < 1) {
+        digitalWrite(TRIGGER, HIGH);  //KY002S, TRG pin
+    }
+
+    twoMinuteTicker.once(120, []() {
+        triggerKY002S();  // Task 2
+    });
+
     // Initialize board first - this sets up SPI and other peripherals
     initBoard();
     
@@ -70,17 +288,17 @@ void setup()
     // Initialize SX126x with the EXACT same settings as OEM example
     Serial.print(F("[SX126x] Initializing ... "));
     
-  int state = radio.begin(
-    radioFreq,  // 915.0 MHz as set earlier
-    125.0,      // Bandwidth (default LoRa)
-    9,          // Spreading factor
-    7,          // Coding rate
-    RADIOLIB_SX126X_SYNC_WORD_PRIVATE,
-    txPower,  // 22 dBm
-    16,        // Preamble length
-    0.0,      // No TCXO
-    true      // 🔐 LDO mode ON
-  );
+    int state = radio.begin(
+        radioFreq,  // 915.0 MHz as set earlier
+        125.0,      // Bandwidth (default LoRa)
+        9,          // Spreading factor
+        7,          // Coding rate
+        RADIOLIB_SX126X_SYNC_WORD_PRIVATE,
+        txPower,  // 22 dBm
+        16,        // Preamble length
+        0.0,      // No TCXO
+        true      // 🔐 LDO mode ON
+    );
     
     if (state == RADIOLIB_ERR_NONE)
     {
@@ -109,7 +327,7 @@ void setup()
     if (state == RADIOLIB_ERR_NONE)
     {
         Serial.println(F("success!"));
-        Serial.println("=== Receiver Ready ===");
+        Serial.println("=== Receiver Ready ===\n");
     }
     else
     {
@@ -132,6 +350,17 @@ void setup()
         u8g2->sendBuffer();
     }
 #endif
+
+   
+    if (!ina226.init()) {
+        Serial.println("\nFailed to init INA226. Check your wiring.");
+        //while(1){}
+    }
+
+    // INA226 configuration
+    ina226.enableAlertLatch();
+    ina226.setAlertType(BUS_UNDER, 2.9);
+    attachInterrupt(digitalPinToInterrupt(ALERT), alert, FALLING);
 }
 
 void loop()
@@ -154,6 +383,8 @@ void loop()
             // packet was successfully received
             Serial.println(F("[SX126x] Received packet!"));
 
+            parseString(str); // Fixed function name and pass the string
+            
             // print data of the packet
             Serial.print(F("[SX126x] Data:\t\t"));
             Serial.println(str);
