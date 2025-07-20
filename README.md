@@ -2,7 +2,7 @@
 
 ### Hardware Required
 
-- Ebyte EoRa-S3-900TB (EoRa PI) pair
+- Ebyte EoRa-S3-900TB (EoRa PI) pair of transceivers for your county ISM frequency band
 - KY-002S bistable MOSFET switch (for remote load control)
 - INA226 I2C current sensor (optional)
 - 3.3V LDO power supply or battery
