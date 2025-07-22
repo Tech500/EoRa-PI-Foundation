@@ -1,0 +1,159 @@
+
+=== RX_Profile_WOR_Mode Starting ===
+Boot #1 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #1
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #2 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #2
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #3 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #3
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #4 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #4
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #5 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #5
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.00 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #6 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #6
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.00 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #7 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #7
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.00 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #8 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #8
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.00 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #9 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #9
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #10 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #10
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.00 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #11 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #11
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.00 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #12 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #12
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #13 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #13
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #14 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #14
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #15 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #15
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.00 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #16 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #16
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #17 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #17
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.00 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #18 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #18
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #19 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #19
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.50 |
+
+Entering deep sleep for 5s...
+=== RX_Profile_WOR_Mode Starting ===
+Boot #20 | Timing Index 0 | Sleep: 5s | RX Window: 200ms
+## RX_Profile_WOR_Mode  Boot #20
+| Timing Index | Sleep Duration (s) | RX Window (ms) | Packet Match | RSSI (dBm) | SNR (dB) |
+|--------------|--------------------|----------------|--------------|------------|----------|
+| 0 | 5 | 200 | Yes | -49.00 | 15.00 |
