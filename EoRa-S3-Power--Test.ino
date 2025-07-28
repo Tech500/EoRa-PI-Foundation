@@ -1,4 +1,4 @@
-#include "eora_s3_power_mgmt.h"
+#include "eora_s3_power_mgmt.h"   //Must be in same folder as eora-S3-Power---Test.ino
 
 void setup() {
     Serial.begin(115200);
