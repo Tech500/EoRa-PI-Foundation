@@ -6,11 +6,10 @@
 - KY-002S bistable MOSFET switch (for remote load control)
 - INA226 I2C current sensor (optional)
 - 3.3V LDO power supply or battery
-- Optional: Google Sheets or logging backend
 
 ### Wiring Guide
 
-See [EoRa-PI-Foundation --Receiver.png](docs/wiring.md) or refer to images in the `/images` folder.
+See ([Schematic](https://github.com/Tech500/EoRa-PI-Foundation/blob/main/EoRa-PI-Foundation%20--Receiver.png)) for schematic of EoRa-S3-900TB (EoRa PI) Receiver.  Only the EoRa PI development board is required, no added components or wiring. 
 
 ### Configuration
 
