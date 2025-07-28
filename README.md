@@ -10,7 +10,7 @@
 
 ### Wiring Guide
 
-See [`docs/wiring.md`](docs/wiring.md) or refer to images in the `/images` folder.
+See [EoRa-PI-Foundation --Receiver.png](docs/wiring.md) or refer to images in the `/images` folder.
 
 ### Configuration
 
