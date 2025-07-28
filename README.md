@@ -9,7 +9,7 @@
 
 ### Wiring Guide
 
-See ([Schematic](https://github.com/Tech500/EoRa-PI-Foundation/blob/main/EoRa-PI-Foundation%20--Receiver.png)) of EoRa-S3-900TB (EoRa PI) Receiver.  Only the EoRa PI development board is required, no added components or wiring. 
+See ([Schematic](https://github.com/Tech500/EoRa-PI-Foundation/blob/main/EoRa-PI-Foundation%20--Receiver.png)) of EoRa-S3-900TB (EoRa PI) Receiver.  Transmitter only requires the EoRa PI development board; no added components or wiring. 
 
 ### Configuration
 
