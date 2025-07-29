@@ -66,7 +66,7 @@ Next web request → Process repeats
 
 Dead Man's Switch Logic
 
-- Active state: Camera powered after receiving periodic "1" packets
+- Active state: Camera powered after receiving on demand web request; "1" packets
 - Safety timeout: 2-minute countdown ensures automatic shutoff
 - Simple & reliable: No complex OFF commands that could fail
 
