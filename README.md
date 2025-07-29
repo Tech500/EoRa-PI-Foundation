@@ -20,13 +20,13 @@
    - **Receiver**: See [wiring schematic](https://github.com/Tech500/EoRa-PI-Foundation/blob/main/EoRa-PI-Foundation%20--Receiver.png) for component connections
 
 3. **Upload & Test**
-   - Flash `sender.ino` to transmitter board
-   - Flash `receiver.ino` to receiver board  
+   - Flash `EoRa_PI_WOR_Transmitter.ino` to transmitter board
+   - Flash `EoRa_PI_WOR_Receiver.ino` to receiver board  
    - Power on both units and test basic communication
 
 ### Understanding the Platform
 The EoRa-S3-900TB comes with helpful configuration files:
-- **`boards.h`** - Configures onboard peripherals (LEDs, I2C, SD card, OLED)
+- **`boards.h`** - Configures onboard peripherals (LEDs, LoRa, I2C, SD card, OLED)
 - **`utilities.h`** - Handles GPIO setup and hardware control logic
 
 These files simplify code adaptation and reduce setup complexity.
@@ -56,7 +56,6 @@ Timestamp: For logging purposes (NTP-based from transmitter)
 
 How It Actually Works
 
-
 Web request received → Preample message switches radio from standby to receive receive mode and awakens ESP32-S3   
 Transmitter sends "1,timestamp" packet
 Receiver gets packet → Resets 2-minute ticker countdown
@@ -69,7 +68,7 @@ Active state: Camera powered after receiving periodic "1" packets
 Safety timeout: 2-minute countdown ensures automatic shutoff
 Simple & reliable: No complex OFF commands that could fail
 
-This is much more elegant than bidirectional control! The ticker timeout provides the safety mechanism, and you only need reliable delivery of the "keep alive" signal. If LoRa communication fails, the system safely defaults to OFF state.
+This is much more elegant than bidirectional control! The ticker timeout provides the safety mechanism, and you only need reliable delivery of the "command, timestamp" packet. If LoRa communication fails, the system safely defaults to OFF state.
 
 ### Typical Use Cases
 - **Remote switching**: Camera activation, equipment control
@@ -79,7 +78,7 @@ This is much more elegant than bidirectional control! The ticker timeout provide
 ## 📈 Optional Features
 
 ### Data Logging
-- **Local logging**: Store sensor data on SD card or flash
+- **Local logging**: Store sensor data on SD card or flash.  Flash storage implemented
 - Option by request; **Cloud integration**: POST INA226 data to Google Sheets via custom Apps Script
 - **Power monitoring**: Track current consumption and battery health
 
