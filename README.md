@@ -106,8 +106,7 @@ We welcome contributions! Here's how to help:
 - 🔧 **Want to code?** Fork the repo and submit a pull request
 - 📚 **Documentation**: Help improve examples, guides, or troubleshooting
 
-## 📜 License
-MIT License – see [`LICENSE`](LICENSE) for details.
+
 
 ## Directory of \EoRa-PI-Foundation\Docs
 
@@ -127,6 +126,21 @@ MIT License – see [`LICENSE`](LICENSE) for details.
 - ESP32-S3 Cold boot init.png
 - Going to Awake .png
 - Going to Deep Sleep.png
+- 
+
+## EoRA-S3-900TB Battery Notes --from "EoRa-PI-User-Manual"
+
+- Battery connector JST-2 1.25 SH Series
+- Connecting the battery and not connecting the TPYE-C interface, the power consumption with the power off
+  is around 5 uA. If the power is turned on and all peripherals are in sleep mode, the power consumption of
+  the whole machine is around 25 uA.
+- The battery is designed for a maximum charging current of 500mA, please ensure that the power supply capacity
+  is sufficient.
+  
+
+## 📜 License
+MIT License – see [`LICENSE`](LICENSE) for details.
+
 
 ---
 > **73's de AB9NQ thanks for stopping by!**  
