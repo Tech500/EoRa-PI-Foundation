@@ -34,6 +34,8 @@ These files simplify code adaptation and reduce setup complexity.
 ## 🔋 Power Optimization
 
 ### Achieving Sub-1mA Operation
+
+- **Power Management by Claude 'eora_S3_power_mgmt.h'
 - **Default WOR cycle**: 2ms awake, 10,000ms sleep
 - **Measured performance**: ~372µA average deep sleep current with 2% duty cycle, 5V Source voltage
 - **Battery life**: Months to years depending on usage patterns
@@ -122,10 +124,10 @@ MIT License – see [`LICENSE`](LICENSE) for details.
 
 - Awake period.png
 - Deep Sleep in Standby 5V Source .png
-- incomplete init.png
+- ESP32-S3 Cold boot init.png
 - Going to Awake .png
 - Going to Deep Sleep.png
 
 ---
 > **73's de AB9NQ thanks for stopping by!**  
-> What started as a simple Wyze Cam switch evolved into a flexible, low-power LoRa + ESP32 foundation.
+> What started as a simple Wyze Cam switch evolved into a flexible, low-power LoRa + ESP32-S3 foundation.
