@@ -55,7 +55,7 @@ LoRa packet format: "1,<timestamp>"
 Only one command: 1 (keep alive/turn ON)
 No OFF command: Switch turns off automatically via ticker timeout
 Timestamp: For logging purposes (NTP-based from transmitter)
-
+  
 How It Actually Works
 
 Web request received → Preample message switches radio from standby to receive receive mode and awakens ESP32-S3   
