@@ -126,7 +126,7 @@ We welcome contributions! Here's how to help:
 - ESP32-S3 Cold boot init.png
 - Going to Awake .png
 - Going to Deep Sleep.png
-- 
+
 
 ## EoRA-S3-900TB Battery Notes --from "EoRa-PI-User-Manual"
 
