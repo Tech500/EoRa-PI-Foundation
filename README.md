@@ -58,7 +58,7 @@ Timestamp: For logging purposes (NTP-based from transmitter)
   
 How It Actually Works
 
-Web request received → Preample message switches radio from standby to receive receive mode and awakens ESP32-S3   
+Web request received → Preample message switches radio from standby to receive mode and awakens ESP32-S3   
 Transmitter sends "1,timestamp" packet
 Receiver gets packet → Resets 2-minute ticker countdown
 No packet received → Ticker expires → Switch turns OFF automatically
