@@ -1,10 +1,8 @@
 /*
-
-  Updated 07/23/2025 # 20:00 EDT  
+  Updated 07/29/2025 # 01:22 EDT  
 
    Based on Ebyte "utilites.h" pin assignments.  Coded by Claude with 
-   prompting by William Lucid and Working Ebyte example for EoRa PI 
-   (Ebyte EoRa-S3-900TB dev board)  "SX1262_Transmit_Interrupt".
+   prompting by William Lucid 
 */
 
 #include <RadioLib.h>
@@ -17,6 +15,7 @@
 #include <Ticker.h>
 #include <rom/rtc.h>
 #include <driver/rtc_io.h>
+#include "eora_s3_power_mgmt.h"
 
 #define USING_SX1262_868M
 
@@ -33,6 +32,9 @@ SX1262 radio = new Module(RADIO_CS_PIN, RADIO_DIO1_PIN, RADIO_RST_PIN, RADIO_BUS
 #endif
 
 #define DI01 GPIO_NUM_15
+
+#define TXD1   12
+#define RXD1   48
 
 // flag to indicate that a packet was received
 volatile bool receivedFlag = false;
@@ -86,51 +88,47 @@ void alert() {
 }
 
 void IRAM_ATTR isrCountTimer() {
-  taskCode = 2;  
+  taskCode = 2;
 }
 
 void dispatchTask(int taskCode, String(timestamp)) {
 #ifdef LOG_ON
-  Serial.println("--- DISPATCHING TASK ---");
-  Serial.print("Task Code: ");
-  Serial.println(taskCode);
+  Serial1.println("--- DISPATCHING TASK ---");
+  Serial1.print("Task Code: ");
+  Serial1.println(taskCode);
 #endif
 
   switch (taskCode) {
     case TASK_MEASURE_POWER:
       //Toggle Switch
       triggerKY002S();
-      Serial.println("Turned on Switch");
+      Serial1.println("Turned on Switch");
       twoMinuteTicker.detach();
-      twoMinuteTicker.once(120.0, isrCountTimer);
+      twoMinuteTicker.once(120.0, isrCountTimer);  //Countdown timer interval 120 Seconds
       break;
     case TASK_TRIGGER_SENSOR:
       triggerKY002S();
-      Serial.println("Turned off Switch");
+      Serial1.println("Turned off Switch");
       goToSleep();
-      break; 
+      break;
     default:
 #ifdef LOG_ON
-      Serial.println("Unknown task");
+      Serial1.println("Unknown task");
 #endif
       break;
   }
 }
 
 void parseString(String str) {
-  Serial.print("\nReceived String: ");
-  Serial.println(str);
-  Serial.flush();
-
   int delimiterIndex = str.indexOf(',');
   if (delimiterIndex != -1) {
     taskCode = str.substring(0, delimiterIndex).toInt();
     timestamp = str.substring(delimiterIndex + 1);  // ✅ Use global timestamp
 
     dispatchTask(taskCode, timestamp);  // ✅ Single call to dispatch
-    Serial.println("Parsed Task: " + String(taskCode));
-    Serial.println("Timestamp: " + timestamp);
-    Serial.flush();
+    Serial1.println("Parsed Task: " + String(taskCode));
+    Serial1.println("Timestamp: " + timestamp);
+    Serial1.flush();
   }
 }
 
@@ -147,10 +145,10 @@ void goToSleep() {
   triggerKY002S();
 
   // Put LoRa radio to sleep
-  //radio.standby();
+  radio.standby();
 
   // Optional: log or pulse logic pin
-  Serial.println("Turned off Switch; Going to Deep Sleep");
+  Serial1.println("Going to Deep Sleep\n");
 
   // Configure the pin as RTC GPIO
   rtc_gpio_init(GPIO_NUM_15);
@@ -165,21 +163,50 @@ void goToSleep() {
 }
 
 void setup() {
-  Serial.begin(115200);
-  while (!Serial) {};
+  Serial1.begin(115200, SERIAL_8N1, RXD1, TXD1);
+  while (!Serial1) {};
+ 
+  // Test config - don't touch ANY GPIOs
+  eora_power_config_t config = {
+    .disable_wifi = true,
+    .disable_bluetooth = true,
+    .disable_uart = false,
+    .disable_adc = true,
+    .disable_i2c = false,
+    .disable_unused_spi = true,
+    .configure_safe_gpios = false  // DISABLE GPIO config temporarily
+  };
 
-  esp_sleep_wakeup_cause_t wakeSource = esp_sleep_get_wakeup_cause();
+  // Keep your pins defined but don't configure them
+  uint64_t my_pins = (1ULL << 12) |  // INA226 Alert
+                     (1ULL << 13) |  // KY002S Trigger
+                     (1ULL << 15) |  // GPIO33->15 route (CRITICAL!)
+                     (1ULL << 38) |  // Wake indicator
+                     (1ULL << 47) |  // INA226 SDA
+                     (1ULL << 48);   // INA226 SCL
 
-  Serial.print("Wake reason: ");
-  switch (wakeSource) {
-    case ESP_SLEEP_WAKEUP_EXT1: Serial.println("External RTC signal (e.g. DIO1)"); break;
-    case ESP_SLEEP_WAKEUP_TIMER: Serial.println("Timer wake"); break;
-    case ESP_SLEEP_WAKEUP_UNDEFINED: Serial.println("Power-on or reset"); break;
-    default: Serial.println("Other wakeup reason"); break;
-  }
+  eora_power_management(&config, my_pins);
+
+  // Only call WiFi/BT disable
+  eora_disable_wifi();
+  eora_disable_bluetooth();
+  eora_disable_adc();
+  eora_disable_unused_spi();
+
+  // Then manually configure GPIO38 after power management
+  gpio_config_t led_config = {
+    .pin_bit_mask = (1ULL << 38),
+    .mode = GPIO_MODE_OUTPUT,
+    .pull_up_en = GPIO_PULLUP_DISABLE,
+    .pull_down_en = GPIO_PULLDOWN_DISABLE,
+    .intr_type = GPIO_INTR_DISABLE
+  };
+
+  gpio_config(&led_config);
+  gpio_set_level(GPIO_NUM_38, 0);  // Turn off LED
 
   bool fsok = LittleFS.begin(true);
-  Serial.printf_P(PSTR("FS init: %s\n"), fsok ? PSTR("ok") : PSTR("fail!"));
+  Serial1.printf_P(PSTR("FS init: %s\n"), fsok ? PSTR("ok") : PSTR("fail!"));
 
   pinMode(TRIGGER, OUTPUT);    // ESP32S3, GPIO45
   pinMode(KY002S_PIN, INPUT);  //ESP32S3, GPIO46
@@ -191,21 +218,21 @@ void setup() {
   // Critical: Wait for board initialization to complete
   delay(2000);
 
-  Serial.println("=== LoRa Receiver Starting ===");
+  Serial1.println("=== LoRa Receiver Starting ===");
 
   // Debug: Print pin configuration
-  Serial.println("📌 Pin Configuration:");
-  Serial.printf("  CS (NSS): GPIO %d\n", RADIO_CS_PIN);
-  Serial.printf("  DIO1: GPIO %d\n", RADIO_DIO1_PIN);
-  Serial.printf("  RESET: GPIO %d\n", RADIO_RST_PIN);
-  Serial.printf("  BUSY: GPIO %d\n", RADIO_BUSY_PIN);
-  Serial.printf("  SCLK: GPIO %d\n", RADIO_SCLK_PIN);
-  Serial.printf("  MISO: GPIO %d\n", RADIO_MISO_PIN);
-  Serial.printf("  MOSI: GPIO %d\n", RADIO_MOSI_PIN);
-  Serial.println();
+  Serial1.println("📌 Pin Configuration:");
+  Serial1.printf("  CS (NSS): GPIO %d\n", RADIO_CS_PIN);
+  Serial1.printf("  DIO1: GPIO %d\n", RADIO_DIO1_PIN);
+  Serial1.printf("  RESET: GPIO %d\n", RADIO_RST_PIN);
+  Serial1.printf("  BUSY: GPIO %d\n", RADIO_BUSY_PIN);
+  Serial1.printf("  SCLK: GPIO %d\n", RADIO_SCLK_PIN);
+  Serial1.printf("  MISO: GPIO %d\n", RADIO_MISO_PIN);
+  Serial1.printf("  MOSI: GPIO %d\n", RADIO_MOSI_PIN);
+  Serial1.println();
 
   // Initialize SX126x with the EXACT same settings as OEM example
-  Serial.print(F("[SX126x] Initializing ... "));
+  Serial1.print(F("[SX126x] Initializing ... "));
 
   int state = radio.begin(
     radioFreq,  // 915.0 MHz as set earlier
@@ -220,15 +247,15 @@ void setup() {
   );
 
   if (state == RADIOLIB_ERR_NONE) {
-    Serial.println(F("success!"));
-    Serial.printf("Radio initialized at %.1f MHz\n", radioFreq);
+    Serial1.println(F("success!"));
+    Serial1.printf("Radio initialized at %.1f MHz\n", radioFreq);
   } else {
-    Serial.print(F("failed, code "));
-    Serial.println(state);
-    Serial.println("Common error codes:");
-    Serial.println("  -707: SPI communication failed");
-    Serial.println("  -2: Chip not found/responding");
-    Serial.println("Check wiring and power supply");
+    Serial1.print(F("failed, code "));
+    Serial1.println(state);
+    Serial1.println("Common error codes:");
+    Serial1.println("  -707: SPI communication failed");
+    Serial1.println("  -2: Chip not found/responding");
+    Serial1.println("Check wiring and power supply");
     while (true) {
       delay(1000);
     }
@@ -237,15 +264,25 @@ void setup() {
   // Set the function that will be called when new packet is received
   radio.setDio1Action(setFlag);
 
+  esp_sleep_wakeup_cause_t wakeSource = esp_sleep_get_wakeup_cause();
+
+  Serial1.print("Wake reason: ");
+  switch (wakeSource) {
+    case ESP_SLEEP_WAKEUP_EXT1: Serial1.println("External RTC signal (e.g. DIO1)"); break;
+    case ESP_SLEEP_WAKEUP_TIMER: Serial1.println("Timer wake"); break;
+    case ESP_SLEEP_WAKEUP_UNDEFINED: Serial1.println("Power-on or reset"); break;
+    default: Serial1.println("Other wakeup reason"); break;
+  }
+
   // Start listening for LoRa packets
-  Serial.print(F("[SX126x] Starting to listen ... "));
+  Serial1.print(F("[SX126x] Starting to listen ... "));
   state = radio.startReceive();
   if (state == RADIOLIB_ERR_NONE) {
-    Serial.println(F("success!"));
-    Serial.println("=== Receiver Ready ===\n");
+    Serial1.println(F("success!"));
+    Serial1.println("=== Receiver Ready ===\n");
   } else {
-    Serial.print(F("failed, code "));
-    Serial.println(state);
+    Serial1.print(F("failed, code "));
+    Serial1.println(state);
     while (true) {
       delay(1000);
     }
@@ -274,25 +311,25 @@ void loop() {
     int state = radio.readData(str);
 
     if (state == RADIOLIB_ERR_NONE) {
-      Serial.println(F("[SX126x] Received packet!"));
+      Serial1.println(F("[SX126x] Received packet!"));
       parseString(str);  // ✅ parseString calls dispatchTask()
       // DO NOT call dispatchTask again here!
-      Serial.print(F("[SX126x] Data:\t\t"));
-      Serial.println(str);
-      Serial.print(F("[SX126x] RSSI:\t\t"));
-      Serial.print(radio.getRSSI());
-      Serial.println(F(" dBm"));
-      Serial.print(F("[SX126x] SNR:\t\t"));
-      Serial.print(radio.getSNR());
-      Serial.println(F(" dB"));
-      Serial.print(F("[SX126x] Frequency error:\t"));
-      Serial.print(radio.getFrequencyError());
-      Serial.println(F(" Hz"));
+      Serial1.print(F("[SX126x] Data:\t\t"));
+      Serial1.println(str);
+      Serial1.print(F("[SX126x] RSSI:\t\t"));
+      Serial1.print(radio.getRSSI());
+      Serial1.println(F(" dBm"));
+      Serial1.print(F("[SX126x] SNR:\t\t"));
+      Serial1.print(radio.getSNR());
+      Serial1.println(F(" dB"));
+      Serial1.print(F("[SX126x] Frequency error:\t"));
+      Serial1.print(radio.getFrequencyError());
+      Serial1.println(F(" Hz"));
     } else if (state == RADIOLIB_ERR_CRC_MISMATCH) {
-      Serial.println(F("CRC error!"));
+      Serial1.println(F("CRC error!"));
     } else {
-      Serial.print(F("Receive failed, code "));
-      Serial.println(state);
+      Serial1.print(F("Receive failed, code "));
+      Serial1.println(state);
     }
 
     radio.startReceive();
