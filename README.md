@@ -64,9 +64,9 @@ Next web request → Process repeats
 
 Dead Man's Switch Logic
 
-Active state: Camera powered after receiving periodic "1" packets
-Safety timeout: 2-minute countdown ensures automatic shutoff
-Simple & reliable: No complex OFF commands that could fail
+- Active state: Camera powered after receiving periodic "1" packets
+- Safety timeout: 2-minute countdown ensures automatic shutoff
+- Simple & reliable: No complex OFF commands that could fail
 
 This is much more elegant than bidirectional control! The ticker timeout provides the safety mechanism, and you only need reliable delivery of the "command, timestamp" packet. If LoRa communication fails, the system safely defaults to OFF state.
 
@@ -107,25 +107,24 @@ We welcome contributions! Here's how to help:
 ## 📜 License
 MIT License – see [`LICENSE`](LICENSE) for details.
 
-## Directories
+## Directory of \EoRa-PI-Foundation\Docs
 
-Directory of \EoRa-PI-Foundation\Docs
-
-Complete Ebyte EoRa-S3-900TB (EoRa PI) Pin Mapping Guide.pdf
-DeepSleep Duty-Cycle.log
-Documents Dir.txt
-EoRa PI Power Profile.jpg 
-EoRa_PI_UserManual_EN_v1.1.pdf
-ESP32-S3 Power Consumption Reference Guides.pdf
-Pin callouts.jpg
+- Complete Ebyte EoRa-S3-900TB (EoRa PI) Pin Mapping Guide.pdf
+- DeepSleep Duty-Cycle.log
+- Documents Dir.txt
+- EoRa PI Power Profile.jpg 
+- EoRa_PI_UserManual_EN_v1.1.pdf
+- ESP32-S3 Power Consumption Reference Guides.pdf
+- Pin callouts.jpg
             
 
-Directory of \EoRa-PI-Foundation\Docs\Deep Sleep Waveforms (Nordic PPK2 Observations)
-Awake period.png
-Deep Sleep in Standby 5V Source .png
-incomplete init.png
-Going to Awake .png
-Going to Deep Sleep.png
+## Directory of \EoRa-PI-Foundation\Docs\Deep Sleep Waveforms (Latest Nordic PPK2 Observations)
+
+- Awake period.png
+- Deep Sleep in Standby 5V Source .png
+- incomplete init.png
+- Going to Awake .png
+- Going to Deep Sleep.png
 
 ---
 > **73's de AB9NQ thanks for stopping by!**  
