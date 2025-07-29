@@ -107,6 +107,26 @@ We welcome contributions! Here's how to help:
 ## 📜 License
 MIT License – see [`LICENSE`](LICENSE) for details.
 
+## Directories
+
+Directory of \EoRa-PI-Foundation\Docs
+
+Complete Ebyte EoRa-S3-900TB (EoRa PI) Pin Mapping Guide.pdf
+DeepSleep Duty-Cycle.log
+Documents Dir.txt
+EoRa PI Power Profile.jpg 
+EoRa_PI_UserManual_EN_v1.1.pdf
+ESP32-S3 Power Consumption Reference Guides.pdf
+Pin callouts.jpg
+            
+
+Directory of \EoRa-PI-Foundation\Docs\Deep Sleep Waveforms (Nordic PPK2 Observations)
+Awake period.png
+Deep Sleep in Standby 5V Source .png
+incomplete init.png
+Going to Awake .png
+Going to Deep Sleep.png
+
 ---
 > **73's de AB9NQ thanks for stopping by!**  
 > What started as a simple Wyze Cam switch evolved into a flexible, low-power LoRa + ESP32 foundation.
