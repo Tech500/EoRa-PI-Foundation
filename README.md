@@ -110,8 +110,3 @@ MIT License – see [`LICENSE`](LICENSE) for details.
 ---
 > **73's de AB9NQ thanks for stopping by!**  
 > What started as a simple Wyze Cam switch evolved into a flexible, low-power LoRa + ESP32 foundation.
-
-### 🚀 Next Steps
-- Check out the [examples folder](examples/) for specific use cases
-- Read the [troubleshooting guide](docs/troubleshooting.md) if you run into issues  
-- Join our [discussions](../../discussions) to share your projects!
