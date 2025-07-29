@@ -35,7 +35,7 @@ These files simplify code adaptation and reduce setup complexity.
 
 ### Achieving Sub-1mA Operation
 
-- **Power Management by Claude 'eora_S3_power_mgmt.h'
+- **Power Management** by Claude:  eora_S3_power_mgmt.h
 - **Default WOR cycle**: 2ms awake, 10,000ms sleep
 - **Measured performance**: ~372µA average deep sleep current with 2% duty cycle, 5V Source voltage
 - **Battery life**: Months to years depending on usage patterns
