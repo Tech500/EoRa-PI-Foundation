@@ -50,7 +50,7 @@ These files simplify code adaptation and reduce setup complexity.
 
 ##  📡  Communication Protocol
 
-LoRa packet format: "1,<timestamp>"
+LoRa packet format: "1, + timestamp"
 
 Only one command: 1 (keep alive/turn ON)
 No OFF command: Switch turns off automatically via ticker timeout
