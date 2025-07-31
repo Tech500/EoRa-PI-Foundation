@@ -1,3 +1,5 @@
+// compiled with Esp32 board manager 2.0.18
+
 #ifndef EORA_S3_POWER_MGMT_H
 #define EORA_S3_POWER_MGMT_H
 
@@ -7,12 +9,13 @@
 #include "esp_pm.h"
 #include "driver/gpio.h"
 #include "driver/uart.h"
-#include "esp_adc/adc_oneshot.h"
+#include "driver/adc.h"           // ← Use this instead
+#include "esp_adc_cal.h"         // ← And this for calibration
 #include "driver/i2c.h"
 #include "soc/periph_defs.h"
-#include "esp_private/periph_ctrl.h"
+#include "driver/periph_ctrl.h"  // ← Public API in 2.0.18
 #include "hal/gpio_hal.h"
-#include "soc/gpio_num.h"
+#include "driver/gpio.h"
 #include "esp_log.h"
 
 static const char* TAG = "EORA_POWER";
