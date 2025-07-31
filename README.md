@@ -14,6 +14,7 @@
 1. **Install Dependencies**
    - Install [RadioLib](https://github.com/jgromes/RadioLib) library in Arduino IDE
    - Download this repository and open desired sketch
+   - Compiled using ESP32 Board Manager 2.0.18
 
 2. **Basic Setup** 
    - **Transmitter**: Uses EoRa PI board only (no additional wiring needed)
