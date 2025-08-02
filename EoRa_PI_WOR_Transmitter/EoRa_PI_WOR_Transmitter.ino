@@ -1,4 +1,4 @@
-//EoRa_PI_Transmitter.ino  
+//Claude's EoRa PI_Transmitter.ino  08/02/2025 @ 01:18  
 //New Ebyte, EoRa PI (EoRa-S3-900TB) LoRa development board 915.0 Mhz  
 //WifiManager library + setup for WiFiManage tzpau (sp?)
 //William Lucid in colboration with Copilot, ChatGPT, Gemini 07/16/2025 @ 09:39 EDT
@@ -92,21 +92,33 @@ String getDateTime() {
 String timestamp = " ";
 
 void sendLoRaWOR(String payload) {
-  Serial.println("Sending WOR LoRa packet: " + payload);
+  Serial.println("=== TRANSMITTING LORA PACKET ===");
+  Serial.println("Payload: " + payload);
+  Serial.printf("Power: %d dBm\n", txPower);
+  Serial.printf("Frequency: %.1f MHz\n", radioFreq);
+  Serial.flush();
   
-  // Send multiple packets to ensure receiver catches one
-  //for(int i = 0; i < 3; i++) {
-    int state = radio.transmit(payload);
-    if (state == RADIOLIB_ERR_NONE) {
-      Serial.println("Packet sent successfully!");
-    } else {
-      Serial.printf("Failed to send packet! Code: %d\n", state);
-    }
-    //delay(50); // Short delay between transmissions
-  //}
+  // Add delay before transmission to ensure receiver is asleep
+  Serial.println("Waiting 3 seconds before transmission...");
+  delay(3000);
   
-  // Longer delay for WOR cycle
-  delay(500);
+  // Send single packet instead of multiple rapid ones
+  Serial.println("Transmitting now...");
+  unsigned long startTime = millis();
+  int state = radio.transmit(payload);
+  unsigned long transmitTime = millis() - startTime;
+  
+  if (state == RADIOLIB_ERR_NONE) {
+    Serial.println("✅ Packet transmitted successfully!");
+    Serial.printf("Transmission time: %lu ms\n", transmitTime);
+    Serial.printf("Packet length: %d bytes\n", payload.length());
+    Serial.println("=== TRANSMISSION COMPLETE ===");
+  } else {
+    Serial.printf("❌ Transmission failed! Error code: %d\n", state);
+    // Error handling...
+  }
+  
+  Serial.println();
 }
 
 void setup() {
@@ -163,7 +175,7 @@ if (state == RADIOLIB_ERR_NONE) {
     String timestamp = dtStamp;  // Correct: update timestamp
     String option = "1";
     String payload = option + "," + timestamp;
-
+    //String payload = option;
     sendLoRaWOR(payload);  // Send WOR-style with timestamp
     request->send(200, "text/plain", "Sent WOR payload: " + payload);
   });
