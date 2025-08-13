@@ -1,5 +1,5 @@
 /*
-  EoRa Pi Foundation --Receiver code    08/13/2025  @ 13:06 EDT
+  EoRa Pi Foundation --Receiver code    08/13/2025  @ 19:48 EDT
   EoRa Pi (EoRa-S3-900TB from EbyeIoT.com) Project is aweb request based; remote, wireless load control.
   William Lucid Designed, Debugged, and Prompted collbative team members Claude, ChatGPT, Copilot, and Gemini
   everyone of the members contributed to a successfull, completed project!
@@ -40,7 +40,7 @@ esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
 // === CONFIGURATION ===
 #define USING_SX1262_868M
 
-#define DISCHARGE_TIME_SECONDS 60  // Production: 2+ minutes, Testing: 60
+#define DISCHARGE_TIME_SECONDS 30  // Production: 2+ minutes, Testing: 60
 
 #if defined(USING_SX1268_433M)
 uint8_t txPower = 14;
@@ -176,7 +176,7 @@ void taskDispatcher(int task) {
 
   case 2:
     // End discharge cycle and sleep
-    Serial.println("Discharge complete - going to sleep");
+    Serial.println("Task 2:  Discharge complete");
 
     //triggerKY002S();  // Turn off load
     Serial.println("Load deactivated");
@@ -187,20 +187,21 @@ void taskDispatcher(int task) {
     break;
 
   default:
-    Serial.printf("Unknown task: %d\n", task);
-    break;
+    Serial.println("Wake on Radio");
+    task = 1;
+    taskDispatcher(task);
   }  
 }
 
 
 void setupLoRa() {
+int state = 0;
+
   delay(1000);
 
   Serial.println("Initializing LoRa...");
 
-  int state = radio.begin(radioFreq, 125.0, 7, 7,
-                          RADIOLIB_SX126X_SYNC_WORD_PRIVATE,
-                          txPower, 512, 0.0, true);
+  setupLoRa();
 
   if (state == RADIOLIB_ERR_NONE) {
     Serial.printf("LoRa OK: %.1f MHz, %d dBm\n", radioFreq, txPower);
@@ -257,20 +258,22 @@ void setup() {
   // When the power is turned on, a delay is required.
   delay(1500);
 
-  Serial.println("Cold boot or other wake source");
+  Serial.println("Cold Boot or Other Start-up");
 
+ 
   // initialize SX126x with default settings
   Serial.print(F("[SX126x] Initializing ... "));
   int state = radio.begin(radioFreq, 125.0, 7, 7,
                           RADIOLIB_SX126X_SYNC_WORD_PRIVATE,
                           txPower, 256, 0.0, true);
-
+                        
   if (state == RADIOLIB_ERR_NONE) {
     Serial.printf("LoRa OK: %.1f MHz, %d dBm\n", radioFreq, txPower);
   } else {
     Serial.printf("LoRa init failed: %d\n", state);
     while (true) delay(1000);  // Halt on LoRa failure
   }
+
 
   // set the function that will be called
   // when new packet is received
