@@ -1,3 +1,14 @@
+/*
+  EoRa Pi Foundation --Transmitter code    08/13/2025  @ 13:06 EDT
+  EoRa Pi (EoRa-S3-900TB from EbyeIoT.com) Project is aweb request based; remote, wireless load control.
+  William Lucid Designed, Debugged, and Prompted collbative team members Claude, ChatGPT, Copilot, and Gemini
+  everyone of the members contributed to a successfull, completed project!
+*/
+
+//Enable RadioLib debug output before anything else
+//#define RADIOLIB_DEBUG
+
+
 #include <RadioLib.h>
 #define EoRa_PI_V1
 #include "boards.h"
