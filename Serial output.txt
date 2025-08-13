@@ -1,0 +1,56 @@
+18:43:34.291 -> initBoard
+18:43:34.291 -> Cold Boot or Other Start-up
+18:43:34.291 -> [SX126x] Initializing ... LoRa OK: 915.0 MHz, 14 dBm
+18:43:34.324 -> [SX126x] Starting to listen ... success!
+18:43:35.460 -> Task: 1, Time: Wed-08-13-2025--18:43:31
+18:43:35.460 -> Starting discharge cycle
+18:43:35.460 -> Load activated
+18:43:35.460 -> Discharge timer:  30 seconds
+18:44:05.477 -> Task 2:  Discharge complete
+18:44:05.477 -> Load deactivated
+18:44:05.477 -> === PREPARING FOR DEEP SLEEP ===
+18:44:05.477 -> DIO1 pin state before sleep: 0
+18:44:05.477 -> Wake pin (GPIO16) state before sleep: 0
+18:44:05.477 -> === TRYING DIFFERENT DUTY CYCLE APPROACHES ===
+18:44:05.477 -> ✅ Auto duty cycle started successfully!
+18:44:05.477 -> Configuring RTC GPIO and deep sleep wake-up...
+18:44:05.477 -> 💤 Going to deep sleep now...
+18:44:05.477 -> Wake-up sources: DIO1 pin interrupt
+18:44:28.790 -> initBoard
+18:44:28.790 -> Cold Boot or Other Start-up
+18:44:28.790 -> [SX126x] Initializing ... LoRa OK: 915.0 MHz, 14 dBm
+18:44:28.790 -> [SX126x] Starting to listen ... success!
+18:44:29.931 -> Task: 1, Time: Wed-08-13-2025--18:44:26
+18:44:29.931 -> Starting discharge cycle
+18:44:29.931 -> Load activated
+18:44:29.931 -> Discharge timer:  30 seconds
+18:44:59.947 -> Task 2:  Discharge complete
+18:44:59.947 -> Load deactivated
+18:44:59.947 -> === PREPARING FOR DEEP SLEEP ===
+18:44:59.947 -> DIO1 pin state before sleep: 0
+18:44:59.947 -> Wake pin (GPIO16) state before sleep: 0
+18:44:59.947 -> === TRYING DIFFERENT DUTY CYCLE APPROACHES ===
+18:44:59.947 -> 1. Trying startReceiveDutyCycleAuto()...
+18:44:59.947 -> ✅ Auto duty cycle started successfully!
+18:44:59.947 -> Configuring RTC GPIO and deep sleep wake-up...
+18:44:59.947 -> 💤 Going to deep sleep now...
+18:44:59.947 -> Wake-up sources: DIO1 pin interrupt
+18:45:29.295 -> initBoard
+18:45:29.295 -> Cold Boot or Other Start-up
+18:45:29.295 -> [SX126x] Initializing ... LoRa OK: 915.0 MHz, 14 dBm
+18:45:29.328 -> [SX126x] Starting to listen ... success!
+18:45:30.432 -> Task: 1, Time: Wed-08-13-2025--18:45:26
+18:45:30.432 -> Starting discharge cycle
+18:45:30.432 -> Load activated
+18:45:30.432 -> Discharge timer:  30 seconds
+18:46:00.462 -> Task 2:  Discharge complete
+18:46:00.462 -> Load deactivated
+18:46:00.462 -> === PREPARING FOR DEEP SLEEP ===
+18:46:00.462 -> DIO1 pin state before sleep: 0
+18:46:00.462 -> Wake pin (GPIO16) state before sleep: 0
+18:46:00.462 -> === TRYING DIFFERENT DUTY CYCLE APPROACHES ===
+18:46:00.462 -> 1. Trying startReceiveDutyCycleAuto()...
+18:46:00.462 -> ✅ Auto duty cycle started successfully!
+18:46:00.462 -> Configuring RTC GPIO and deep sleep wake-up...
+18:46:00.462 -> 💤 Going to deep sleep now...
+18:46:00.462 -> Wake-up sources: DIO1 pin interrupt
