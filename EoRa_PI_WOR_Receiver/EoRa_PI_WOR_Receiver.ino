@@ -1,6 +1,6 @@
 /*
   EoRa Pi Foundation --Receiver code    08/13/2025  @ 19:48 EDT
-  EoRa Pi (EoRa-S3-900TB from EbyeIoT.com) Project is aweb request based; remote, wireless load control.
+  EoRa Pi (EoRa-S3-900TB from EbyeIoT.com) Project is a web request based; remote, wireless load control.
   William Lucid Designed, Debugged, and Prompted collbative team members Claude, ChatGPT, Copilot, and Gemini
   everyone of the members contributed to a successfull, completed project!
 */
@@ -378,3 +378,4 @@ void print_reset_reason(RESET_REASON reason) {
       Serial.println("NO_MEAN");
   }
 }
+
