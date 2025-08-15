@@ -1,6 +1,6 @@
 /*
-  EoRa Pi Foundation --Receiver code    08/13/2025  @ 19:48 EDT
-  EoRa Pi (EoRa-S3-900TB from EbyeIoT.com) Project is a web request based; remote, wireless load control.
+  EoRa Pi Foundation --Receiver code    08/15/2025  @ 00:36 EDT
+  EoRa Pi (EoRa-S3-900TB from EbyeIoT.com) Project is aweb request based; remote, wireless load control.
   William Lucid Designed, Debugged, and Prompted collbative team members Claude, ChatGPT, Copilot, and Gemini
   everyone of the members contributed to a successfull, completed project!
 */
@@ -12,6 +12,10 @@
 #include <rom/rtc.h>
 #include <driver/rtc_io.h>
 #include <Ticker.h>
+#include "eora_s3_power_mgmt.h"
+
+// Check wake-up reason
+esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
 
 Ticker dischargeTimer;
 
@@ -30,8 +34,6 @@ Ticker dischargeTimer;
 // Use existing WAKE_PIN definition
 #define WAKE_PIN GPIO_NUM_16  // Inverted DIO1 signal for RTC wake-up
 
-esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
-
 /** LED on level */
 #define LED_ON HIGH
 /** LED off level */
@@ -40,7 +42,7 @@ esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
 // === CONFIGURATION ===
 #define USING_SX1262_868M
 
-#define DISCHARGE_TIME_SECONDS 30  // Production: 2+ minutes, Testing: 60
+#define DISCHARGE_TIME_SECONDS 30  // Production: 2+ minutes, Testing: 30 seconds for video
 
 #if defined(USING_SX1268_433M)
 uint8_t txPower = 14;
@@ -61,6 +63,11 @@ SX1262 radio = new Module(RADIO_CS_PIN, RADIO_DIO1_PIN, RADIO_RST_PIN, RADIO_BUS
 #define LORA_CODINGRATE 7                                 // [1: 4/5, 2: 4/6, 3: 4/7, 4: 4/8] -> RadioLib uses 7 for 4/7
 #define LORA_PREAMBLE_LENGTH 512                          // INCREASED TO MATCH TRANSMITTER!
 #define LORA_SYNC_WORD RADIOLIB_SX126X_SYNC_WORD_PRIVATE  // LoRa sync word
+
+// === PIN DEFINITIONS ===
+#define TRIGGER 15     // KY002S bi-stable switch control
+#define KY002S_PIN 46  // KY002S switch state readback
+//#define ALERT 19        // INA226 battery monitor alert
 
 // Add this with your other RTC variables
 RTC_DATA_ATTR String packetBuffer = "";
@@ -108,14 +115,13 @@ void print_reset_reason(RESET_REASON reason);
  * DEBUG: Try different duty cycle approaches
  */
 void startDutyCycleReceiving(void) {
-  Serial.println("=== TRYING DIFFERENT DUTY CYCLE APPROACHES ===");
 
   // Approach 1: Auto duty cycle
-  Serial.println("1. Trying startReceiveDutyCycleAuto()...");
+  Serial.println("Starting 'startReceiveDutyCycleAuto()'...");
   int state = radio.startReceiveDutyCycleAuto(64, 8);  // 64 symbol preamble, 8 min symbols
 
   if (state == RADIOLIB_ERR_NONE) {
-    Serial.println("✅ Auto duty cycle started successfully!");
+    Serial.println("Auto duty cycle started successfully!");
     return;
   } else {
     Serial.printf("❌ Auto duty cycle failed: %d\n", state);
@@ -144,6 +150,12 @@ void startDutyCycleReceiving(void) {
   }
 }
 
+void triggerKY002S() {
+  digitalWrite(TRIGGER, LOW);
+  delay(100);
+  digitalWrite(TRIGGER, HIGH);
+}
+
 void parseString(String str) {
   int delimiterIndex = str.indexOf(',');
   if (delimiterIndex != -1) {
@@ -151,7 +163,7 @@ void parseString(String str) {
     timestamp = str.substring(delimiterIndex + 1);
 
 #ifdef LOG_ON
-    Serial.printf("Task: %d, Time: %s\n", task, timestamp.c_str());
+    //Serial.printf("Task: %d, Time: %s\n", task, timestamp.c_str());
 #endif
   }
 }
@@ -159,49 +171,60 @@ void parseString(String str) {
 void taskDispatcher(int task) {
   switch (task) {
     case 1:
+      task = 0;
       digitalWrite(BUILTIN_LED, HIGH);
       // Start high-power discharge cycle
-      Serial.println("Starting discharge cycle");
-
-      //triggerKY002S();  // Turn on load
+      Serial.println("✅ Task 1:  Starting discharge cycle");
+      triggerKY002S();  // Turn on load
       Serial.println("Load activated");
 
       // Start discharge timer
       dischargeTimer.detach();
       dischargeTimer.once(DISCHARGE_TIME_SECONDS, dischargeComplete);
       Serial.print("Discharge timer:  ");
-      Serial.print(DISCHARGE_TIME_SECONDS);  
+      Serial.print(DISCHARGE_TIME_SECONDS);
       Serial.println(" seconds");
-  break;
+      break;
 
-  case 2:
-    // End discharge cycle and sleep
-    Serial.println("Task 2:  Discharge complete");
+    case 2:
+      // End discharge cycle and sleep
+      Serial.println("✅ Task 2:  Discharge complete");
+      triggerKY002S();  // Turn off load
+      Serial.println("Load deactivated");
 
-    //triggerKY002S();  // Turn off load
-    Serial.println("Load deactivated");
+      digitalWrite(BUILTIN_LED, LOW);
 
-    digitalWrite(BUILTIN_LED, LOW);
+      goToSleep();
+      break;
 
-    goToSleep();
-    break;
+    case 3:
+      Serial.println("✅ Wake on Radio");
+      break;
 
-  default:
-    Serial.println("Wake on Radio");
-    task = 1;
-    taskDispatcher(task);
-  }  
+    default:
+      Serial.println("Unknown case");
+      break;
+  }
 }
 
-
 void setupLoRa() {
-int state = 0;
+  int state = 0;
 
   delay(1000);
 
   Serial.println("Initializing LoRa...");
 
-  setupLoRa();
+  state = radio.begin(
+    radioFreq,  // 915.0 MHz
+    125.0,      // Bandwidth
+    7,          // Spreading factor
+    7,          // Coding rate
+    RADIOLIB_SX126X_SYNC_WORD_PRIVATE,
+    14,   // 14 dBm for good balance
+    512,   // Preamble length
+    0.0,  // No TCXO
+    true  // LDO mode ON
+  );
 
   if (state == RADIOLIB_ERR_NONE) {
     Serial.printf("LoRa OK: %.1f MHz, %d dBm\n", radioFreq, txPower);
@@ -222,9 +245,46 @@ int state = 0;
   } else {
     Serial.println("Start receive failed:  " + state);
   }
+
+  // set the function that will be called
+  // when new packet is received
+  radio.setDio1Action(setFlag);
+
+  // start listening for LoRa packets
+  Serial.print(F("[SX126x] Starting to listen ... "));
+  state = radio.startReceive();
+  if (state == RADIOLIB_ERR_NONE) {
+    Serial.println(F("success!"));
+    task = 3;
+    taskDispatcher(task);
+    task = 1;
+    taskDispatcher(task);
+  } else {
+    Serial.print(F("failed, code "));
+    Serial.println(state);
+    while (true)
+      ;
+  }
+
+  // check if the flag is set
+  if (receivedFlag) {
+    // reset flag
+    receivedFlag = false;
+
+    // you can read received data as an Arduino String
+    String str;
+    int state = radio.readData(str);
+    //parseString(str);
+    task = 1;
+    taskDispatcher(task);
+  }
+  
 }
 
 void goToSleep(void) {
+
+  radio.standby();
+
   Serial.println("=== PREPARING FOR DEEP SLEEP ===");
   Serial.printf("DIO1 pin state before sleep: %d\n", digitalRead(RADIO_DIO1_PIN));
   Serial.printf("Wake pin (GPIO16) state before sleep: %d\n", digitalRead(WAKE_PIN));
@@ -242,7 +302,7 @@ void goToSleep(void) {
   // Turn off LED before sleep
   digitalWrite(BOARD_LED, LED_OFF);
 
-  Serial.println("💤 Going to deep sleep now...");
+  Serial.println("✅ Going to deep sleep now...");
   Serial.println("Wake-up sources: DIO1 pin interrupt");
   Serial.flush();  // Make sure all serial data is sent before sleep
 
@@ -250,30 +310,35 @@ void goToSleep(void) {
   esp_deep_sleep_start();
 }
 
-/**
- * ESP32 startup
- */
 void setup() {
+
   initBoard();
-  // When the power is turned on, a delay is required.
   delay(1500);
+
+  // Check wake-up reason
+  esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
+  
+  if (wakeup_reason == ESP_SLEEP_WAKEUP_EXT0) {
+    Serial.println("Woke from LoRa packet");
+    setupLoRa();
+    return;  // Skip cold boot initialization
+  }
 
   Serial.println("Cold Boot or Other Start-up");
 
- 
+
   // initialize SX126x with default settings
   Serial.print(F("[SX126x] Initializing ... "));
   int state = radio.begin(radioFreq, 125.0, 7, 7,
                           RADIOLIB_SX126X_SYNC_WORD_PRIVATE,
-                          txPower, 256, 0.0, true);
-                        
+                          txPower, 512, 0.0, true);
+
   if (state == RADIOLIB_ERR_NONE) {
     Serial.printf("LoRa OK: %.1f MHz, %d dBm\n", radioFreq, txPower);
   } else {
     Serial.printf("LoRa init failed: %d\n", state);
     while (true) delay(1000);  // Halt on LoRa failure
   }
-
 
   // set the function that will be called
   // when new packet is received
@@ -301,6 +366,7 @@ void setup() {
   // radio.readData();
   // radio.scanChannel();
 }
+
 
 void loop() {
 
@@ -378,4 +444,3 @@ void print_reset_reason(RESET_REASON reason) {
       Serial.println("NO_MEAN");
   }
 }
-
