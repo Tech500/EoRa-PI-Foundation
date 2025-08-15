@@ -1,0 +1,59 @@
+00:24:02.366 -> ESP-ROM:esp32s3-20210327
+00:24:51.761 -> initBoard
+00:24:51.761 -> Cold Boot or Other Start-up
+00:24:51.761 -> [SX126x] Initializing ... LoRa OK: 915.0 MHz, 14 dBm
+00:24:51.793 -> [SX126x] Starting to listen ... success!
+00:24:55.117 -> ✅ Wake on Radio
+00:24:55.831 -> ✅ Task 1:  Starting discharge cycle
+00:24:55.927 -> Load activated
+00:24:55.927 -> Discharge timer:  30 seconds
+00:25:25.934 -> ✅ Task 2:  Discharge complete
+00:25:26.046 -> Load deactivated
+00:25:26.046 -> === PREPARING FOR DEEP SLEEP ===
+00:25:26.046 -> DIO1 pin state before sleep: 0
+00:25:26.046 -> Wake pin (GPIO16) state before sleep: 0
+00:25:26.046 -> Starting 'startReceiveDutyCycleAuto()'...
+00:25:26.046 -> Auto duty cycle started successfully!
+00:25:26.046 -> Configuring RTC GPIO and deep sleep wake-up...
+00:25:26.046 -> ✅ Going to deep sleep now...
+00:25:26.046 -> Wake-up sources: DIO1 pin interrupt
+00:25:36.209 -> initBoard
+00:25:36.209 -> Woke from LoRa packet
+00:25:37.213 -> Initializing LoRa...
+00:25:37.247 -> LoRa OK: 915.0 MHz, 14 dBm
+00:25:37.247 -> LoRa receiver ready
+00:25:37.247 -> [SX126x] Starting to listen ... success!
+00:25:37.247 -> ✅ Wake on Radio
+00:25:37.247 -> ✅ Task 1:  Starting discharge cycle
+00:25:37.345 -> Load activated
+00:25:37.345 -> Discharge timer:  30 seconds
+00:26:07.357 -> ✅ Task 2:  Discharge complete
+00:26:07.454 -> Load deactivated
+00:26:07.454 -> === PREPARING FOR DEEP SLEEP ===
+00:26:07.454 -> DIO1 pin state before sleep: 0
+00:26:07.454 -> Wake pin (GPIO16) state before sleep: 0
+00:26:07.454 -> Starting 'startReceiveDutyCycleAuto()'...
+00:26:07.454 -> Auto duty cycle started successfully!
+00:26:07.454 -> Configuring RTC GPIO and deep sleep wake-up...
+00:26:07.454 -> ✅ Going to deep sleep now...
+00:26:07.454 -> Wake-up sources: DIO1 pin interrupt
+00:27:56.398 -> initBoard
+00:27:56.398 -> Woke from LoRa packet
+00:27:57.413 -> Initializing LoRa...
+00:27:57.413 -> LoRa OK: 915.0 MHz, 14 dBm
+00:27:57.413 -> LoRa receiver ready
+00:27:57.413 -> [SX126x] Starting to listen ... success!
+00:27:57.413 -> ✅ Wake on Radio
+00:27:57.413 -> ✅ Task 1:  Starting discharge cycle
+00:27:57.543 -> Load activated
+00:27:57.543 -> Discharge timer:  30 seconds
+00:28:27.533 -> ✅ Task 2:  Discharge complete
+00:28:27.629 -> Load deactivated
+00:28:27.629 -> === PREPARING FOR DEEP SLEEP ===
+00:28:27.629 -> DIO1 pin state before sleep: 0
+00:28:27.629 -> Wake pin (GPIO16) state before sleep: 0
+00:28:27.629 -> Starting 'startReceiveDutyCycleAuto()'...
+00:28:27.629 -> Auto duty cycle started successfully!
+00:28:27.629 -> Configuring RTC GPIO and deep sleep wake-up...
+00:28:27.629 -> ✅ Going to deep sleep now...
+00:28:27.629 -> Wake-up sources: DIO1 pin interrupt
