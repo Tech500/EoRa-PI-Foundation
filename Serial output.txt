@@ -1,59 +1,80 @@
-00:24:02.366 -> ESP-ROM:esp32s3-20210327
-00:24:51.761 -> initBoard
-00:24:51.761 -> Cold Boot or Other Start-up
-00:24:51.761 -> [SX126x] Initializing ... LoRa OK: 915.0 MHz, 14 dBm
-00:24:51.793 -> [SX126x] Starting to listen ... success!
-00:24:55.117 -> ✅ Wake on Radio
-00:24:55.831 -> ✅ Task 1:  Starting discharge cycle
-00:24:55.927 -> Load activated
-00:24:55.927 -> Discharge timer:  30 seconds
-00:25:25.934 -> ✅ Task 2:  Discharge complete
-00:25:26.046 -> Load deactivated
-00:25:26.046 -> === PREPARING FOR DEEP SLEEP ===
-00:25:26.046 -> DIO1 pin state before sleep: 0
-00:25:26.046 -> Wake pin (GPIO16) state before sleep: 0
-00:25:26.046 -> Starting 'startReceiveDutyCycleAuto()'...
-00:25:26.046 -> Auto duty cycle started successfully!
-00:25:26.046 -> Configuring RTC GPIO and deep sleep wake-up...
-00:25:26.046 -> ✅ Going to deep sleep now...
-00:25:26.046 -> Wake-up sources: DIO1 pin interrupt
-00:25:36.209 -> initBoard
-00:25:36.209 -> Woke from LoRa packet
-00:25:37.213 -> Initializing LoRa...
-00:25:37.247 -> LoRa OK: 915.0 MHz, 14 dBm
-00:25:37.247 -> LoRa receiver ready
-00:25:37.247 -> [SX126x] Starting to listen ... success!
-00:25:37.247 -> ✅ Wake on Radio
-00:25:37.247 -> ✅ Task 1:  Starting discharge cycle
-00:25:37.345 -> Load activated
-00:25:37.345 -> Discharge timer:  30 seconds
-00:26:07.357 -> ✅ Task 2:  Discharge complete
-00:26:07.454 -> Load deactivated
-00:26:07.454 -> === PREPARING FOR DEEP SLEEP ===
-00:26:07.454 -> DIO1 pin state before sleep: 0
-00:26:07.454 -> Wake pin (GPIO16) state before sleep: 0
-00:26:07.454 -> Starting 'startReceiveDutyCycleAuto()'...
-00:26:07.454 -> Auto duty cycle started successfully!
-00:26:07.454 -> Configuring RTC GPIO and deep sleep wake-up...
-00:26:07.454 -> ✅ Going to deep sleep now...
-00:26:07.454 -> Wake-up sources: DIO1 pin interrupt
-00:27:56.398 -> initBoard
-00:27:56.398 -> Woke from LoRa packet
-00:27:57.413 -> Initializing LoRa...
-00:27:57.413 -> LoRa OK: 915.0 MHz, 14 dBm
-00:27:57.413 -> LoRa receiver ready
-00:27:57.413 -> [SX126x] Starting to listen ... success!
-00:27:57.413 -> ✅ Wake on Radio
-00:27:57.413 -> ✅ Task 1:  Starting discharge cycle
-00:27:57.543 -> Load activated
-00:27:57.543 -> Discharge timer:  30 seconds
-00:28:27.533 -> ✅ Task 2:  Discharge complete
-00:28:27.629 -> Load deactivated
-00:28:27.629 -> === PREPARING FOR DEEP SLEEP ===
-00:28:27.629 -> DIO1 pin state before sleep: 0
-00:28:27.629 -> Wake pin (GPIO16) state before sleep: 0
-00:28:27.629 -> Starting 'startReceiveDutyCycleAuto()'...
-00:28:27.629 -> Auto duty cycle started successfully!
-00:28:27.629 -> Configuring RTC GPIO and deep sleep wake-up...
-00:28:27.629 -> ✅ Going to deep sleep now...
-00:28:27.629 -> Wake-up sources: DIO1 pin interrupt
+21:19:34.253 -> ESP-ROM:esp32s3-20210327
+21:19:48.877 -> initBoard
+21:19:48.877 -> CPU Frequency: 80 MHz
+21:19:50.372 -> Power-on reset - initializing and going to sleep
+21:19:50.404 -> LoRa OK: 915.0 MHz, 14 dBm
+21:19:50.404 -> Going to sleep - wake on first packet
+21:19:50.404 -> === PREPARING FOR DEEP SLEEP ===
+21:19:50.404 -> DIO1 pin state before sleep: 0
+21:19:50.404 -> Wake pin (GPIO16) state before sleep: 0
+21:19:50.404 -> Starting 'startReceiveDutyCycleAuto()'...
+21:19:50.404 -> Auto duty cycle started successfully!
+21:19:50.404 -> Configuring RTC GPIO and deep sleep wake-up...
+21:19:50.404 -> ✅ Going to deep sleep now...
+21:19:50.404 -> Wake-up sources: DIO1 pin reroute
+21:19:58.536 -> initBoard
+21:19:58.536 -> CPU Frequency: 80 MHz
+21:20:00.037 -> Woke from LoRa packet
+21:20:01.037 -> Initializing LoRa...
+21:20:01.070 -> LoRa OK: 915.0 MHz, 14 dBm
+21:20:01.070 -> LoRa receiver ready
+21:20:01.070 -> [SX126x] Starting to listen ... success!
+21:20:01.070 -> ✅ Wake on Radio
+21:20:01.070 -> ✅ Task 1:  Starting discharge cycle
+21:20:01.070 -> LoRa radio.sleep() called
+21:20:01.168 -> Load activated
+21:20:01.168 -> Discharge timer:  30 seconds
+21:20:31.165 -> ✅ Task 2:  Discharge complete
+21:20:31.262 -> Load deactivated
+21:20:31.262 -> === PREPARING FOR DEEP SLEEP ===
+21:20:31.262 -> DIO1 pin state before sleep: 0
+21:20:31.262 -> Wake pin (GPIO16) state before sleep: 0
+21:20:31.262 -> Starting 'startReceiveDutyCycleAuto()'...
+21:20:31.262 -> Auto duty cycle started successfully!
+21:20:31.262 -> Configuring RTC GPIO and deep sleep wake-up...
+21:20:31.262 -> ✅ Going to deep sleep now...
+21:20:31.262 -> Wake-up sources: DIO1 pin reroute
+21:20:43.287 -> initBoard
+21:20:43.287 -> CPU Frequency: 80 MHz
+21:20:44.784 -> Woke from LoRa packet
+21:20:45.790 -> Initializing LoRa...
+21:20:45.790 -> LoRa OK: 915.0 MHz, 14 dBm
+21:20:45.823 -> LoRa receiver ready
+21:20:45.823 -> [SX126x] Starting to listen ... success!
+21:20:45.823 -> ✅ Wake on Radio
+21:20:45.823 -> ✅ Task 1:  Starting discharge cycle
+21:20:45.823 -> LoRa radio.sleep() called
+21:20:45.921 -> Load activated
+21:20:45.921 -> Discharge timer:  30 seconds
+21:21:15.902 -> ✅ Task 2:  Discharge complete
+21:21:15.998 -> Load deactivated
+21:21:16.032 -> === PREPARING FOR DEEP SLEEP ===
+21:21:16.032 -> DIO1 pin state before sleep: 0
+21:21:16.032 -> Wake pin (GPIO16) state before sleep: 0
+21:21:16.032 -> Starting 'startReceiveDutyCycleAuto()'...
+21:21:16.032 -> Auto duty cycle started successfully!
+21:21:16.032 -> Configuring RTC GPIO and deep sleep wake-up...
+21:21:16.032 -> ✅ Going to deep sleep now...
+21:21:16.032 -> Wake-up sources: DIO1 pin reroute
+21:21:57.016 -> initBoard
+21:21:57.016 -> CPU Frequency: 80 MHz
+21:21:58.514 -> Woke from LoRa packet
+21:21:59.519 -> Initializing LoRa...
+21:21:59.552 -> LoRa OK: 915.0 MHz, 14 dBm
+21:21:59.552 -> LoRa receiver ready
+21:21:59.552 -> [SX126x] Starting to listen ... success!
+21:21:59.552 -> ✅ Wake on Radio
+21:21:59.552 -> ✅ Task 1:  Starting discharge cycle
+21:21:59.552 -> LoRa radio.sleep() called
+21:21:59.648 -> Load activated
+21:21:59.648 -> Discharge timer:  30 seconds
+21:22:29.644 -> ✅ Task 2:  Discharge complete
+21:22:29.741 -> Load deactivated
+21:22:29.741 -> === PREPARING FOR DEEP SLEEP ===
+21:22:29.741 -> DIO1 pin state before sleep: 0
+21:22:29.741 -> Wake pin (GPIO16) state before sleep: 0
+21:22:29.741 -> Starting 'startReceiveDutyCycleAuto()'...
+21:22:29.741 -> Auto duty cycle started successfully!
+21:22:29.741 -> Configuring RTC GPIO and deep sleep wake-up...
+21:22:29.741 -> ✅ Going to deep sleep now...
+21:22:29.741 -> Wake-up sources: DIO1 pin reroute
