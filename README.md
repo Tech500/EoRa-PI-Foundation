@@ -1,4 +1,4 @@
-# Ultra-Low Power LoRa Remote Control with ESP32-S3 Deep Sleep + Duty Cycle Reception
+# Ultra-Low Power LoRa Remote Control with ESP32-S3 Deep Sleep + Duty Cycle Reception   --README.md created by Claude
 
 [![GitHub](https://img.shields.io/badge/GitHub-EoRa--PI--Foundation-blue)](https://github.com/Tech500/EoRa-PI-Foundation)
 
@@ -105,7 +105,8 @@ sendCommandPacket();  // Actual command execution
 ## 🔧 Technical Implementation
 
 ### Library Integration
-- **Successfully converted** from SX126x-Arduino library to RadioLib
+- **Successfully converted** from SX126x-Arduino library, example "DeepSleep.ino"
+  to RadioLib, EoRa_PI_Foundation_Receiver
 - **Preserved duty cycle** reception capabilities
 - **Clean String-based** packet reading implementation
 
