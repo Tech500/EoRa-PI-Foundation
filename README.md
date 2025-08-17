@@ -60,7 +60,7 @@ Successfully implemented an **ultra-low power LoRa remote control system** using
 - **ESP32-S3 Deep Sleep**: Ultra-low consumption when idle
 - **LoRa Duty Cycle**: `radio.startReceiveDutyCycleAuto()` minimizes radio power
 - **Wake-on-Radio Protocol**: Two-stage packet system for reliable operation
-- **Smart GPIO Routing**: SX1262 DIO1 → GPIO33 → 74HC04N → 74HC04N → GPIO16 → ESP32 RTC Wake
+- **Smart GPIO Routing**: SX1262 DIO1 → GPIO33 → 74HC04N (input A1, Y1 connected to A2, output y2) → GPIO16 → ESP32 RTC Wake
 
 ### Power-Saving Configuration
 ```cpp
