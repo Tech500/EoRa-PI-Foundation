@@ -204,7 +204,7 @@ This project was developed with testing and guidance from:
 - **William Lucid** – Founder & Developer  
 - **OpenAI ChatGPT** – Engineering Assistant & Debugging Partner
 - **Claude** – Lead programmer & Debugger, Battery Analysis, "EoRa_PI_WOR_Receiver.ino"  
-- **Copilot** and **Gemini** – Support and Contributions to coding
+- **Copilot**, "DIO1 re-routing" and **Gemini** – Support and Contributions to coding
 - Community testers and contributors
 
 ## 🤝 Contributing
