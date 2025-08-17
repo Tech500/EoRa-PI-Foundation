@@ -1,4 +1,4 @@
-# Ultra-Low Power LoRa Remote Control with ESP32-S3 Deep Sleep + Duty Cycle Reception   --README.md created by Claude
+# Ultra-Low Power LoRa Remote Control with ESP32-S3 Deep Sleep + Duty Cycle Reception   
 
 [![GitHub](https://img.shields.io/badge/GitHub-EoRa--PI--Foundation-blue)](https://github.com/Tech500/EoRa-PI-Foundation)
 
