@@ -12,7 +12,7 @@ Successfully implemented an **ultra-low power LoRa remote control system** using
 - **Development Board**: EoRa Pi ESP32-S3 (SX1262 LoRa 915MHz)
 - **Power Consumption**: ~175 µA average (measured with Nordic Power Profiler Kit II)
 - **Battery Life**: 13-19 months on 3000 mAh LiPo
-- **Custom wake-up circuit** using dual 74HC04N buffers for clean signal routing
+- **Custom wake-up circuit** using a 74HC04N DIP package of six inverters (two used) for clean signal routing
 
 ## 🛠️ Getting Started
 
