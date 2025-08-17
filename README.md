@@ -112,16 +112,36 @@ sendCommandPacket();  // Actual command execution
 ### Deep Sleep Management
 ```cpp
 void goToSleep(void) {
-    // Configure LoRa for duty cycle reception
-    radio.startReceiveDutyCycleAuto();
-    
-    // Configure RTC GPIO wake-up
-    rtc_gpio_pulldown_en(WAKE_PIN);
-    esp_sleep_enable_ext0_wakeup(WAKE_PIN, RISING);
-    
-    // Enter deep sleep
-    esp_deep_sleep_start();
+
+  radio.sleep();
+
+  Serial.println("=== PREPARING FOR DEEP SLEEP ===");
+  Serial.printf("DIO1 pin state before sleep: %d\n", digitalRead(RADIO_DIO1_PIN));
+  Serial.printf("Wake pin (GPIO16) state before sleep: %d\n", digitalRead(WAKE_PIN));
+
+  // Set up the radio for duty cycle receiving
+  radio.startReceiveDutyCycleAuto();
+
+  Serial.println("Configuring RTC GPIO and deep sleep wake-up...");
+  // Configure GPIO16 for RTC wake-up - using internal pull-down
+  rtc_gpio_pulldown_en(WAKE_PIN);  // Internal pull-down on GPIO16
+
+  // Setup deep sleep with wakeup by GPIO16 - RISING edge (buffered DIO1 signal)
+  esp_sleep_enable_ext0_wakeup(WAKE_PIN, RISING);
+
+  // Turn off LED before sleep
+  digitalWrite(BOARD_LED, LED_OFF);
+
+  Serial.println("✅ Going to deep sleep now...");
+  Serial.println("Wake-up sources: DIO1 pin reroute");
+  Serial.flush();  // Make sure all serial data is sent before sleep
+
+  SPI.end();
+
+  // Finally set ESP32 into sleep
+  esp_deep_sleep_start();  
 }
+
 ```
 
 ## 📊 Performance Results
