@@ -1,5 +1,5 @@
 /*
-  EoRa Pi Foundation --Receiver code    08/15/2025  @ 00:36 EDT
+  EoRa Pi Foundation --Receiver code    08/17/2025  @ 08:59 EDT
   EoRa Pi (EoRa-S3-900TB from EbyeIoT.com) Project is aweb request based; remote, wireless load control.
   William Lucid Designed, Debugged, and Prompted collbative team members Claude, ChatGPT, Copilot, and Gemini
   everyone of the members contributed to a successfull, completed project!
@@ -8,6 +8,7 @@
 #include <RadioLib.h>
 #define EoRa_PI_V1
 
+#include <SPI.h>
 #include "boards.h"
 #include <rom/rtc.h>
 #include <driver/rtc_io.h>
@@ -34,6 +35,7 @@ Ticker dischargeTimer;
 // Use existing WAKE_PIN definition
 #define WAKE_PIN GPIO_NUM_16  // Inverted DIO1 signal for RTC wake-up
 
+#define BOARD_LED 37
 /** LED on level */
 #define LED_ON HIGH
 /** LED off level */
@@ -43,6 +45,9 @@ Ticker dischargeTimer;
 #define USING_SX1262_868M
 
 #define DISCHARGE_TIME_SECONDS 30  // Production: 2+ minutes, Testing: 30 seconds for video
+
+SPIClass spi(SPI);
+SPISettings spiSettings(2000000, MSBFIRST, SPI_MODE0);
 
 #if defined(USING_SX1268_433M)
 uint8_t txPower = 14;
@@ -276,8 +281,7 @@ void setupLoRa() {
     // you can read received data as an Arduino String
     String str;
     int state = radio.readData(str);
-    //parseString(str);
-    task = 1;
+    parseString(str);
     taskDispatcher(task);
   }
   
@@ -285,14 +289,14 @@ void setupLoRa() {
 
 void goToSleep(void) {
 
-  radio.standby();
+  radio.sleep();
 
   Serial.println("=== PREPARING FOR DEEP SLEEP ===");
   Serial.printf("DIO1 pin state before sleep: %d\n", digitalRead(RADIO_DIO1_PIN));
   Serial.printf("Wake pin (GPIO16) state before sleep: %d\n", digitalRead(WAKE_PIN));
 
   // Set up the radio for duty cycle receiving
-  startDutyCycleReceiving();
+  radio.startReceiveDutyCycleAuto();
 
   Serial.println("Configuring RTC GPIO and deep sleep wake-up...");
   // Configure GPIO16 for RTC wake-up - using internal pull-down
@@ -305,27 +309,29 @@ void goToSleep(void) {
   digitalWrite(BOARD_LED, LED_OFF);
 
   Serial.println("✅ Going to deep sleep now...");
-  Serial.println("Wake-up sources: DIO1 pin interrupt");
+  Serial.println("Wake-up sources: DIO1 pin reroute");
   Serial.flush();  // Make sure all serial data is sent before sleep
+
+  SPI.end();
 
   // Finally set ESP32 into sleep
   esp_deep_sleep_start();
+
+  
 }
 
 void setup() {
   initBoard();
-  delay(1500);
-
+  
   setCpuFrequencyMhz(80);
   Serial.begin(115200);
+
+  SPI.begin(RADIO_SCLK_PIN, RADIO_MISO_PIN, RADIO_MOSI_PIN);
   
   Serial.print("CPU Frequency: ");
   Serial.print(getCpuFrequencyMhz());
   Serial.println(" MHz");
   
-  delay(1500);
-
-
   // 🔥 NEW: Add power management optimizations
   eora_disable_wifi();
   eora_disable_bluetooth();
