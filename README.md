@@ -24,7 +24,7 @@ Successfully implemented an **ultra-low power LoRa remote control system** using
 
 #### For Remote Control Applications
 - **KY-002S bistable MOSFET switch** - Enables remote load switching
-- **Dual 74HC04N inverters** - For clean wake signal routing (GPIO33 → GPIO16)
+- **74HC04N DIP package of Six inverters (two used)** - For unity gain buffering and clean wake signal routing (GPIO33 → GPIO16)
 - **INA226 I2C current sensor** *(optional)* - For power monitoring and logging
 
 ### Quick Start Guide
