@@ -104,6 +104,34 @@ sendCommandPacket();  // Actual command execution
 4. Receiver processes command → Resets 2-minute safety timer
 5. No packet received → Timer expires → Switch turns OFF automatically
 
+## 🚀 Operation & Setup
+
+### Network Configuration
+The transmitter uses **WiFiManager** (by tzapu) for easy network setup without hardcoding credentials:
+
+1. **Initial Setup Mode**
+   - Power on the transmitter device
+   - Device creates WiFi access point: `EoRa-PI-Setup` 
+   - Connect to this network from your phone/computer
+   - Open web browser and navigate to: `192.168.4.1`
+
+2. **Configure Your Network**
+   - Select your home WiFi network from the list
+   - Enter your WiFi password
+   - Device will connect and display the assigned IP address
+
+3. **Remote Control Operation**
+   - Note the IP address displayed (e.g., `192.168.1.100`)
+   - Open web browser on any device connected to your network
+   - Navigate to: `[YOUR_IP_ADDRESS]/relay`
+   - Example: `192.168.1.100/relay`
+   - This sends the LoRa WOR (Wake-On-Radio) packet followed by command packet to the receiver
+
+### Web Interface
+- **Simple HTTP endpoint**: Just add `/relay` to your device's IP address
+- **Instant transmission**: Sends wake packet + command packet sequence
+- **No complex interface**: Single-click operation for remote control
+
 ## 🔧 Technical Implementation
 
 ### Library Integration
