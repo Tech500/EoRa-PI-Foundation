@@ -32,7 +32,7 @@ Successfully implemented an **ultra-low power LoRa remote control system** using
 1. **Install Dependencies**
    - Install [RadioLib](https://github.com/jgromes/RadioLib) library in Arduino IDE
    - Download this repository and open desired sketch
-   - Compiled using ESP32 Board Manager 2.0.18
+   - Compiled using ESP32 Board Manager 2.0.17
 
 2. **Basic Setup** 
    - **Transmitter**: Uses "EoRa PI" board only (no additional wiring needed)
@@ -60,8 +60,9 @@ Successfully implemented an **ultra-low power LoRa remote control system** using
 ### Key Power Management Features
 - **ESP32-S3 Deep Sleep**: Ultra-low consumption when idle
 - **LoRa Duty Cycle**: `radio.startReceiveDutyCycleAuto()` minimizes radio power
-- **Wake-on-Radio Protocol**: Two-stage packet system for reliable operation
-- **Smart GPIO Routing**: SX1262 DIO1 → GPIO33 → 74HC04N (input A1, Y1 connected to A2, output y2) → GPIO16 → ESP32 RTC Wake
+- **Wake-on-Radio Protocol**: Two-stage packet system for reliable operation; single transmission
+- **Smart RTC_GPIO Routing**: SX1262 DIO1 → GPIO33 → 74HC04N (input A1, Y1 output connected to A2
+  input, y2 output) → RTC_GPIO16 → ESP32 RTC_GPIO external0 Wake up.
 
 ### Power-Saving Configuration
 ```cpp
@@ -71,7 +72,7 @@ Bandwidth: 125.0 kHz
 Spreading Factor: 7
 Coding Rate: 4/7
 TX Power: 14 dBm
-Preamble: 256 symbols (critical for duty cycle timing)
+Preamble: 512 symbols (critical for duty cycle timing)
 Sync Word: RADIOLIB_SX126X_SYNC_WORD_PRIVATE
 ```
 
@@ -107,7 +108,7 @@ sendCommandPacket();  // Actual command execution
 
 ### Library Integration
 - **Successfully converted** from SX126x-Arduino library, example "DeepSleep.ino"
-  to RadioLib, EoRa_PI_Foundation_Receiver
+  to RadioLib, "EoRa_PI_Foundation_Receiver.ino"
 - **Preserved duty cycle** reception capabilities
 - **Clean String-based** packet reading implementation
 
@@ -149,7 +150,7 @@ void goToSleep(void) {
 ## 📊 Performance Results
 
 ### Power Consumption
-- **Deep Sleep**: ~23 uA, Average ~175 µA (ESP32-S3) + duty cycle radio consumption
+- **Deep Sleep**: ~23 uA, Average current ~175 µA (ESP32-S3) + duty cycle radio consumption
 - **Active Time**: <5% duty cycle during command execution
 - **Wake-up Time**: <2 seconds
 - **Command Processing**: Immediate response
@@ -172,15 +173,15 @@ void goToSleep(void) {
 
 ### Optional Features
 - **Local logging**: Store sensor data on SD card or flash memory
-- **Cloud integration**: POST INA226 data to Google Sheets via Apps Script
+- **Cloud integration**: Optional by request; POST INA226 data to Google Sheets via Apps Script
 - **Power monitoring**: Track current consumption and battery health
 - **Multi-node networks**: Scale to multiple sensor/control points
 
 ## 🧠 Key Lessons Learned
 
-1. **GPIO Routing Critical**: RTC GPIO access essential for deep sleep wake-up
+1. **GPIO Routing Critical**: RTC_GPIO access essential for deep sleep wake-up
 2. **Parameter Matching**: TX/RX LoRa parameters must match exactly
-3. **Duty Cycle Timing**: Longer preambles (256+ symbols) crucial for reliable reception
+3. **Duty Cycle Timing**: Longer preambles (512 symbols) crucial for reliable reception
 4. **RadioLib Integration**: String-based packet reading provides clean implementation
 5. **Two-Stage Protocol**: Wake-On-Radio approach solves timing challenges elegantly
 6. **Power Measurement**: NPPK II essential for validating ultra-low power performance
