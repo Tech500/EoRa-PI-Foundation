@@ -20,11 +20,12 @@ Successfully implemented an **ultra-low power LoRa remote control system** using
 #### Essential Hardware
 - **Ebyte EoRa-S3-900TB (EoRa PI)** - Pair of transceivers for your country's ISM frequency band
 - **3000 mAh LiPo Battery** - JST-2 1.25 SH Series connector
-- **Development Environment** - [Arduino IDE 2.3.6](https://www.arduino.cc/en/software) or [PlatformIO](https://platformio.org/)
+- **Development Environment** - [Arduino IDE 2.3.6](https://www.arduino.cc/en/software)
+- **Choose Board** - "ESP32S3 Development Module"   
 
 #### For Remote Control Applications
 - **KY-002S bistable MOSFET switch** - Enables remote load switching
-- **74HC04N DIP package of Six inverters (two used)** - For unity gain buffering and clean wake signal routing (GPIO33 → GPIO16)
+- **74HC04N DIP package of Six inverters (two used)** - For unity gain buffering and clean wake signal routing (GPIO33 → RTC_GPIO16)
 - **INA226 I2C current sensor** *(optional)* - For power monitoring and logging
 
 ### Quick Start Guide
@@ -34,7 +35,7 @@ Successfully implemented an **ultra-low power LoRa remote control system** using
    - Compiled using ESP32 Board Manager 2.0.18
 
 2. **Basic Setup** 
-   - **Transmitter**: Uses EoRa PI board only (no additional wiring needed)
+   - **Transmitter**: Uses "EoRa PI" board only (no additional wiring needed)
    - **Receiver**: See [wiring schematic](https://github.com/Tech500/EoRa-PI-Foundation/blob/main/EoRa-PI-Foundation%20--Receiver.png) for component connections
 
 3. **Upload & Test**
