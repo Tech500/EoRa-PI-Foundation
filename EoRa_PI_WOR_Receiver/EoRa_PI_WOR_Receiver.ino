@@ -1,19 +1,41 @@
 /*
-  EoRa Pi Foundation --Receiver code    08/17/2025  @ 08:59 EDT
+  EoRa Pi Foundation --Receiver code    08/20/2025  @ 21:23 EDT
   EoRa Pi (EoRa-S3-900TB from EbyeIoT.com) Project is aweb request based; remote, wireless load control.
   William Lucid Designed, Debugged, and Prompted collbative team members Claude, ChatGPT, Copilot, and Gemini
   everyone of the members contributed to a successfull, completed project!
+
+  Added INA226 Power Monitor
 */
 
 #include <RadioLib.h>
 #define EoRa_PI_V1
 
-#include <SPI.h>
+
 #include "boards.h"
+#include <Wire.h>
+#include <SPI.h>
+#include <FS.h>
+#include <LittleFS.h>
+#include <INA226_WE.h>
 #include <rom/rtc.h>
 #include <driver/rtc_io.h>
 #include <Ticker.h>
 #include "eora_s3_power_mgmt.h"
+
+TwoWire I2Cbus2 = TwoWire(1);
+
+#define I2C_ADDRESS 0x40
+
+/* There are several ways to create your INA226 object:
+ * INA226_WE ina226 = INA226_WE(); -> uses I2C Address = 0x40 / Wire
+ * INA226_WE ina226 = INA226_WE(I2C_ADDRESS);   
+ * INA226_WE ina226 = INA226_WE(&Wire); -> uses I2C_ADDRESS = 0x40, pass any Wire Object
+ * INA226_WE ina226 = INA226_WE(&Wire, I2C_ADDRESS); 
+ */
+
+INA226_WE ina226 = INA226_WE(&I2Cbus2, I2C_ADDRESS);
+
+int symbols = 512;
 
 // Check wake-up reason
 esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
@@ -44,7 +66,7 @@ Ticker dischargeTimer;
 // === CONFIGURATION ===
 #define USING_SX1262_868M
 
-#define DISCHARGE_TIME_SECONDS 30  // Production: 2+ minutes, Testing: 30 seconds for video
+#define COUNTDOWN_TIME_SECONDS 30  // Production: 2+ minutes, Testing: 30 seconds
 
 SPIClass spi(SPI);
 SPISettings spiSettings(2000000, MSBFIRST, SPI_MODE0);
@@ -66,23 +88,34 @@ SX1262 radio = new Module(RADIO_CS_PIN, RADIO_DIO1_PIN, RADIO_RST_PIN, RADIO_BUS
 #define LORA_BANDWIDTH 125.0                              // kHz
 #define LORA_SPREADING_FACTOR 7                           // [SF7..SF12]
 #define LORA_CODINGRATE 7                                 // [1: 4/5, 2: 4/6, 3: 4/7, 4: 4/8] -> RadioLib uses 7 for 4/7
-#define LORA_PREAMBLE_LENGTH 512                          // INCREASED TO MATCH TRANSMITTER!
+#define LORA_PREAMBLE_LENGTH symbols                         // INCREASED TO MATCH TRANSMITTER!
 #define LORA_SYNC_WORD RADIOLIB_SX126X_SYNC_WORD_PRIVATE  // LoRa sync word
 
 // === PIN DEFINITIONS ===
+#define SDA  12
+#define SCL  47
+
 #define TRIGGER 15     // KY002S bi-stable switch control
-#define KY002S_PIN 46  // KY002S switch state readback
-//#define ALERT 19        // INA226 battery monitor alert
+#define KY002S_PIN 38  // KY002S switch state readback
+
+#define ALERT  39       // INA226 battery monitor alert
 
 // Add this with your other RTC variables
 RTC_DATA_ATTR String packetBuffer = "";
 RTC_DATA_ATTR bool packetWaiting = false;
 
 int task = 0;
-String str = "";
-String timestamp = "";
+String str;
+String timestamp;
 
 #define BUFFER_SIZE 512  // Define the payload size here
+
+volatile bool event = false;
+
+void alert() {
+  event = true;
+  detachInterrupt(TRIGGER);
+}
 
 // flag to indicate that a packet was received
 volatile bool receivedFlag = false;
@@ -123,7 +156,7 @@ void startDutyCycleReceiving(void) {
 
   // Approach 1: Auto duty cycle
   Serial.println("Starting 'startReceiveDutyCycleAuto()'...");
-  int state = radio.startReceiveDutyCycleAuto(64, 8);  // 64 symbol preamble, 8 min symbols
+  int state = radio.startReceiveDutyCycleAuto();  // 64 symbol preamble, 8 min symbols
 
   if (state == RADIOLIB_ERR_NONE) {
     Serial.println("Auto duty cycle started successfully!");
@@ -161,18 +194,6 @@ void triggerKY002S() {
   digitalWrite(TRIGGER, HIGH);
 }
 
-void parseString(String str) {
-  int delimiterIndex = str.indexOf(',');
-  if (delimiterIndex != -1) {
-    task = str.substring(0, delimiterIndex).toInt();
-    timestamp = str.substring(delimiterIndex + 1);
-
-#ifdef LOG_ON
-    //Serial.printf("Task: %d, Time: %s\n", task, timestamp.c_str());
-#endif
-  }
-}
-
 void taskDispatcher(int task) {
   switch (task) {
     case 1:
@@ -181,15 +202,16 @@ void taskDispatcher(int task) {
       digitalWrite(BUILTIN_LED, HIGH);
       // Start high-power discharge cycle
       Serial.println("✅ Task 1:  Starting discharge cycle");
+      Serial.println(timestamp);
       Serial.println("LoRa radio.sleep() called");
       triggerKY002S();  // Turn on load
       Serial.println("Load activated");
-
+      getINA226(timestamp);
       // Start discharge timer
       dischargeTimer.detach();
-      dischargeTimer.once(DISCHARGE_TIME_SECONDS, dischargeComplete);
+      dischargeTimer.once(COUNTDOWN_TIME_SECONDS, dischargeComplete);
       Serial.print("Discharge timer:  ");
-      Serial.print(DISCHARGE_TIME_SECONDS);
+      Serial.print(COUNTDOWN_TIME_SECONDS);
       Serial.println(" seconds");
       break;
 
@@ -211,6 +233,24 @@ void taskDispatcher(int task) {
     default:
       Serial.println("Unknown case");
       break;
+  }
+}
+
+
+String getStoredTimestamp() {
+  static String storedTimestamp = "";
+  return storedTimestamp;
+}
+
+void parseString(String str) {
+  int delimiterIndex = str.indexOf(',');
+  if (delimiterIndex != -1) {
+    task = str.substring(0, delimiterIndex).toInt();
+    timestamp = str.substring(delimiterIndex + 1);
+
+#ifdef LOG_ON
+    //Serial.printf("Task: %d, Time: %s\n", task, timestamp.c_str());
+#endif
   }
 }
 
@@ -284,7 +324,6 @@ void setupLoRa() {
     parseString(str);
     taskDispatcher(task);
   }
-  
 }
 
 void goToSleep(void) {
@@ -294,7 +333,7 @@ void goToSleep(void) {
   Serial.println("=== PREPARING FOR DEEP SLEEP ===");
   Serial.printf("DIO1 pin state before sleep: %d\n", digitalRead(RADIO_DIO1_PIN));
   Serial.printf("Wake pin (GPIO16) state before sleep: %d\n", digitalRead(WAKE_PIN));
-
+  
   // Set up the radio for duty cycle receiving
   radio.startReceiveDutyCycleAuto();
 
@@ -315,9 +354,7 @@ void goToSleep(void) {
   SPI.end();
 
   // Finally set ESP32 into sleep
-  esp_deep_sleep_start();
-
-  
+  esp_deep_sleep_start();  
 }
 
 void setup() {
@@ -325,6 +362,40 @@ void setup() {
   
   setCpuFrequencyMhz(80);
   Serial.begin(115200);
+
+  Wire.begin();
+
+  I2Cbus2.begin(SDA, SCL);
+
+  Serial.println(timestamp);
+
+  bool fsok = LittleFS.begin(true);
+  Serial.printf_P(PSTR("\nFS init: %s\n"), fsok ? PSTR("ok") : PSTR("fail!"));
+
+  // === BASIC PIN SETUP ONLY ===
+  pinMode(TRIGGER, OUTPUT);
+  pinMode(KY002S_PIN, INPUT);
+  pinMode(ALERT, INPUT);
+
+  if(KY002S_PIN == HIGH){
+    triggerKY002S();
+  }
+
+  if (!ina226.init()) {
+    Serial.println("Failed to init INA226. Check your wiring.");
+    while(1){}
+  }
+
+  delay(100);
+
+  // ina226.setAverage(AVERAGE_1024);
+  // ina226.setConversionTime(CONV_TIME_8244);
+  ina226.setMeasureMode(TRIGGERED);  // choose mode and uncomment for change of default
+  // ina226.setCorrectionFactor(0.95);
+  ina226.enableAlertLatch();
+  ina226.setAlertType(BUS_UNDER, 3.1);
+
+  attachInterrupt(digitalPinToInterrupt(TRIGGER), alert, FALLING);
 
   SPI.begin(RADIO_SCLK_PIN, RADIO_MISO_PIN, RADIO_MOSI_PIN);
   
@@ -348,10 +419,16 @@ void setup() {
   // 🔥 NEW: Check if this is a power-on reset (compile/upload/reset)
   if (wakeup_reason == ESP_SLEEP_WAKEUP_UNDEFINED) {
     Serial.println("Power-on reset - initializing and going to sleep");
+
+  delay(50);
+
+  if(KY002S_PIN == HIGH){
+    triggerKY002S();  
+  }
     
     int state = radio.begin(radioFreq, 125.0, 7, 7,
                             RADIOLIB_SX126X_SYNC_WORD_PRIVATE,
-                            txPower, 512, 0.0, true);
+                            txPower, symbols, 0.0, true);
 
     if (state == RADIOLIB_ERR_NONE) {
       Serial.printf("LoRa OK: %.1f MHz, %d dBm\n", radioFreq, txPower);
@@ -373,6 +450,18 @@ void setup() {
 
 void loop() {
 
+  if (event) {
+    ina226.readAndClearFlags();  // reads interrupt and overflow flags and deletes them
+    //getINA226(timestamp);  //displayResults();
+    attachInterrupt(digitalPinToInterrupt(TRIGGER), alert, FALLING);
+    event = false;
+    Serial.println("Battery Alert set for 3.1 Volts");
+    Serial.print("Battery Under-voltage \n\n");
+
+    //while (1) {};
+    ina226.readAndClearFlags();
+  }
+
   if (taskMgr) {
     taskMgr = false;
     task = 2;
@@ -392,6 +481,93 @@ void loop() {
     taskDispatcher(task);
   }
 }
+
+void getINA226(String timestamp) {
+  float shuntVoltage_mV = 0.0;
+  float loadVoltage_V = 0.0;
+  float busVoltage_V = 0.0;
+  float current_mA = 0.0;
+  float power_mW = 0.0;
+  ina226.startSingleMeasurement();
+  ina226.readAndClearFlags();
+  shuntVoltage_mV = ina226.getShuntVoltage_mV();
+  busVoltage_V = ina226.getBusVoltage_V();
+  current_mA = ina226.getCurrent_mA();
+  power_mW = ina226.getBusPower();
+  loadVoltage_V = busVoltage_V + (shuntVoltage_mV / 1000);
+  checkForI2cErrors();
+
+  Serial.println(timestamp);
+  Serial.print("\nShunt Voltage [mV]: ");
+  Serial.println(shuntVoltage_mV);
+  Serial.print("Bus Voltage [V]: ");
+  Serial.println(busVoltage_V);
+  Serial.print("Load Voltage [V]: ");
+  Serial.println(loadVoltage_V);
+  Serial.print("Current[mA]: ");
+  Serial.println(current_mA);
+  Serial.print("Bus Power [mW]: ");
+  Serial.println(power_mW);
+
+  if (!ina226.overflow) {
+    Serial.println("Values OK - no overflow");
+  } else {
+    Serial.println("Overflow! Choose higher current range");
+  }
+  Serial.println();
+
+  // Open a "log.txt" for appended writing
+  File log = LittleFS.open("/log.txt", "a");
+
+  if (!log) {
+    Serial.println("file 'log.txt' open failed");
+  }
+
+  log.print(timestamp);
+  log.print(" , ");
+  log.print(shuntVoltage_mV, 3);
+  log.print(" , ");
+  log.print(busVoltage_V, 3);
+  log.print(" , ");
+  log.print(loadVoltage_V, 3);
+  log.print(" , ");
+  log.print(current_mA, 3);
+  log.print(" , ");
+  log.print(power_mW, 3);
+  log.println("");
+  log.close();
+}
+
+void checkForI2cErrors() {
+  byte errorCode = ina226.getI2cErrorCode();
+  if (errorCode) {
+    Serial.print("I2C error: ");
+    Serial.println(errorCode);
+    switch (errorCode) {
+      case 1:
+        Serial.println("Data too long to fit in transmit buffer");
+        break;
+      case 2:
+        Serial.println("Received NACK on transmit of address");
+        break;
+      case 3:
+        Serial.println("Received NACK on transmit of data");
+        break;
+      case 4:
+        Serial.println("Other error");
+        break;
+      case 5:
+        Serial.println("Timeout");
+        break;
+      default:
+        Serial.println("Can't identify the error");
+    }
+    if (errorCode) {
+      //while (1) {}
+    }
+  }
+}
+
 
 /**
  * Print the reset reason.
