@@ -1,0 +1,65 @@
+03:22:05.354 -> 
+03:22:05.354 -> 
+03:22:05.354 -> FS init: ok
+03:22:05.354 -> CPU Frequency: 80 MHz
+03:22:05.354 -> Power-on reset - initializing and going to sleep
+03:22:05.354 -> initBoard
+03:22:06.391 -> [SX126x] Initializing ... success!
+03:22:06.424 -> [SX126x] Starting to listen ... success!
+03:22:14.068 -> [SX126x] Received packet!
+03:22:14.068 -> [SX126x] Data:		3, WOR--1234567890qwerty
+03:22:14.068 -> Task: 3, Time:  WOR--1234567890qwerty
+03:22:14.068 -> ✅ Wake on Radio
+03:22:14.068 -> [SX126x] RSSI:		-42.00 dBm
+03:22:14.068 -> [SX126x] SNR:		11.75 dB
+03:22:15.013 -> [SX126x] Received packet!
+03:22:15.013 -> [SX126x] Data:		1,Tue-08-26-2025--03:22:13
+03:22:15.046 -> Task: 1, Time: Tue-08-26-2025--03:22:13
+03:22:15.046 -> ✅ Task 1:  Timer Started
+03:22:15.046 -> Tue-08-26-2025--03:22:13
+03:22:15.046 -> LoRa radio.sleep() called
+03:22:15.144 -> Load Activated
+03:22:46.613 -> 
+03:22:46.613 -> 
+03:22:46.613 -> FS init: ok
+03:22:46.613 -> CPU Frequency: 80 MHz
+03:22:46.613 -> initBoard
+03:22:46.613 -> [SX126x] Initializing ... success!
+03:22:46.645 -> [SX126x] Starting to listen ... success!
+03:22:46.645 -> ✅ Task 2:  Timer Expired
+03:22:46.744 -> Load Deactivated
+03:22:46.744 -> === PREPARING FOR DEEP SLEEP ===
+03:22:46.744 -> DIO1 pin state before sleep: 0
+03:22:46.744 -> Wake pin (GPIO16) state before sleep: 0
+03:22:46.744 -> DIO1 pin state before sleep: 0
+03:22:46.744 -> Wake pin (GPIO16) state before sleep: 0
+03:22:46.744 -> Configuring RTC GPIO and deep sleep wake-up...
+03:22:46.744 -> ✅ Going to deep sleep now...
+03:22:46.744 -> Wake-up sources: DIO1 pin reroute
+03:24:38.898 -> 
+03:24:38.898 -> 
+03:24:38.898 -> FS init: ok
+03:24:38.898 -> CPU Frequency: 80 MHz
+03:24:38.898 -> Woke from LoRa packet
+03:24:38.898 -> initBoard
+03:24:38.898 -> [SX126x] Initializing ... success!
+03:24:38.929 -> [SX126x] Starting to listen ... success!
+03:24:38.929 -> ✅ Task 1:  Timer Started
+03:24:38.929 -> 
+03:24:38.929 -> LoRa radio.sleep() called
+03:24:39.026 -> Load Activated
+03:25:10.666 -> 
+03:25:10.666 -> 
+03:25:10.666 -> FS init: ok
+03:25:10.666 -> CPU Frequency: 80 MHz
+03:25:10.666 -> initBoard
+03:25:10.666 -> [SX126x] Initializing ... success!
+03:25:10.666 -> [SX126x] Starting to listen ... success!
+03:25:10.701 -> ✅ Task 2:  Timer Expired
+03:25:10.799 -> Load Deactivated
+03:25:10.799 -> === PREPARING FOR DEEP SLEEP ===
+03:25:10.799 -> DIO1 pin state before sleep: 0
+03:25:10.799 -> Wake pin (GPIO16) state before sleep: 0
+03:25:10.799 -> Configuring RTC GPIO and deep sleep wake-up...
+03:25:10.799 -> ✅ Going to deep sleep now...
+03:25:10.799 -> Wake-up sources: DIO1 pin reroute
