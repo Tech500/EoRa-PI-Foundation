@@ -1,10 +1,11 @@
 /*
-  EoRa Pi Foundation --Receiver code    08/20/2025  @ 21:23 EDT
+  EoRa Pi Foundation --Receiver code    08/26/2025  @ 03:54 EDT
   EoRa Pi (EoRa-S3-900TB from EbyeIoT.com) Project is aweb request based; remote, wireless load control.
   William Lucid Designed, Debugged, and Prompted collbative team members Claude, ChatGPT, Copilot, and Gemini
   everyone of the members contributed to a successfull, completed project!
-
-  Added INA226 Power Monitor
+  
+  Complete, reliable, and repeatable cycles; LoRa, remote Load Controller project
+  Removed INA226 Power Monitor 
 */
 
 #include <RadioLib.h>
@@ -16,33 +17,15 @@
 #include <SPI.h>
 #include <FS.h>
 #include <LittleFS.h>
-#include <INA226_WE.h>
 #include <rom/rtc.h>
 #include <driver/rtc_io.h>
 #include <Ticker.h>
 #include "eora_s3_power_mgmt.h"
 
-TwoWire I2Cbus2 = TwoWire(1);
-
-#define I2C_ADDRESS 0x40
-
-/* There are several ways to create your INA226 object:
- * INA226_WE ina226 = INA226_WE(); -> uses I2C Address = 0x40 / Wire
- * INA226_WE ina226 = INA226_WE(I2C_ADDRESS);   
- * INA226_WE ina226 = INA226_WE(&Wire); -> uses I2C_ADDRESS = 0x40, pass any Wire Object
- * INA226_WE ina226 = INA226_WE(&Wire, I2C_ADDRESS); 
- */
-
-INA226_WE ina226 = INA226_WE(&I2Cbus2, I2C_ADDRESS);
-
 int symbols = 512;
 
 // Check wake-up reason
 esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
-
-Ticker dischargeTimer;
-
-#define LOG_ON
 
 // EoRa Pi dev board pin configuration
 #define RADIO_SCLK_PIN 5
@@ -66,11 +49,6 @@ Ticker dischargeTimer;
 // === CONFIGURATION ===
 #define USING_SX1262_868M
 
-#define COUNTDOWN_TIME_SECONDS 30  // Production: 2+ minutes, Testing: 30 seconds
-
-SPIClass spi(SPI);
-SPISettings spiSettings(2000000, MSBFIRST, SPI_MODE0);
-
 #if defined(USING_SX1268_433M)
 uint8_t txPower = 14;
 float radioFreq = 433.0;
@@ -82,6 +60,11 @@ SX1262 radio = new Module(RADIO_CS_PIN, RADIO_DIO1_PIN, RADIO_RST_PIN, RADIO_BUS
 #endif
 
 
+#define COUNTDOWN_TIME_SECONDS 30  // Production: 2+ minutes, Testing: 30 seconds
+
+SPIClass spi(SPI);
+SPISettings spiSettings(2000000, MSBFIRST, SPI_MODE0);
+
 // Define LoRa parameters (MUST MATCH TRANSMITTER EXACTLY!)
 #define RF_FREQUENCY 915.0                                // MHz
 #define TX_OUTPUT_POWER 14                                // dBm
@@ -90,6 +73,8 @@ SX1262 radio = new Module(RADIO_CS_PIN, RADIO_DIO1_PIN, RADIO_RST_PIN, RADIO_BUS
 #define LORA_CODINGRATE 7                                 // [1: 4/5, 2: 4/6, 3: 4/7, 4: 4/8] -> RadioLib uses 7 for 4/7
 #define LORA_PREAMBLE_LENGTH symbols                         // INCREASED TO MATCH TRANSMITTER!
 #define LORA_SYNC_WORD RADIOLIB_SX126X_SYNC_WORD_PRIVATE  // LoRa sync word
+
+#define DUTY_CYCLE_PARAMS 100, 4900  // Test 5 --(Best --2% Duty cycle  100, 4900)
 
 // === PIN DEFINITIONS ===
 #define SDA  12
@@ -109,13 +94,6 @@ String str;
 String timestamp;
 
 #define BUFFER_SIZE 512  // Define the payload size here
-
-volatile bool event = false;
-
-void alert() {
-  event = true;
-  detachInterrupt(TRIGGER);
-}
 
 // flag to indicate that a packet was received
 volatile bool receivedFlag = false;
@@ -149,77 +127,33 @@ String wakeupReason = "Unknown";
 /** Print reset reason */
 void print_reset_reason(RESET_REASON reason);
 
-/**
- * DEBUG: Try different duty cycle approaches
- */
-void startDutyCycleReceiving(void) {
-
-  // Approach 1: Auto duty cycle
-  Serial.println("Starting 'startReceiveDutyCycleAuto()'...");
-  int state = radio.startReceiveDutyCycleAuto();  // 64 symbol preamble, 8 min symbols
-
-  if (state == RADIOLIB_ERR_NONE) {
-    Serial.println("Auto duty cycle started successfully!");
-    return;
-  } else {
-    Serial.printf("❌ Auto duty cycle failed: %d\n", state);
-  }
-
-  // Approach 2: Manual duty cycle with conservative timing
-  Serial.println("2. Trying manual duty cycle (conservative)...");
-  state = radio.startReceiveDutyCycle(1000000, 2000000);  // 1s RX, 2s sleep
-
-  if (state == RADIOLIB_ERR_NONE) {
-    Serial.println("✅ Manual duty cycle (conservative) started!");
-    return;
-  } else {
-    Serial.printf("❌ Manual duty cycle failed: %d\n", state);
-  }
-
-  // Approach 3: Fallback to continuous receive
-  Serial.println("3. Falling back to continuous receive...");
-  state = radio.startReceive();
-
-  if (state == RADIOLIB_ERR_NONE) {
-    Serial.println("⚠️  Continuous receive started (no power savings)");
-  } else {
-    Serial.printf("❌ Continuous receive failed: %d\n", state);
-    Serial.println("🚨 ALL RECEIVE METHODS FAILED!");
-  }
-}
-
 void triggerKY002S() {
   digitalWrite(TRIGGER, LOW);
   delay(100);
   digitalWrite(TRIGGER, HIGH);
 }
 
-void taskDispatcher(int task) {
+void taskDispatcher(int task, String timestamp) {
   switch (task) {
     case 1:
       task = 0;
       radio.sleep();
       digitalWrite(BUILTIN_LED, HIGH);
-      // Start high-power discharge cycle
-      Serial.println("✅ Task 1:  Starting discharge cycle");
+      Serial.println("✅ Task 1:  Timer Started");
       Serial.println(timestamp);
       Serial.println("LoRa radio.sleep() called");
       triggerKY002S();  // Turn on load
-      Serial.println("Load activated");
-      getINA226(timestamp);
-      // Start discharge timer
-      dischargeTimer.detach();
-      dischargeTimer.once(COUNTDOWN_TIME_SECONDS, dischargeComplete);
-      Serial.print("Discharge timer:  ");
-      Serial.print(COUNTDOWN_TIME_SECONDS);
-      Serial.println(" seconds");
+      Serial.println("Load Activated");
+      // Start timer
+      wakeByTimer();
       break;
 
     case 2:
       // End discharge cycle and sleep
-      Serial.println("✅ Task 2:  Discharge complete");
+      Serial.println("✅ Task 2:  Timer Expired");
+      radio.startReceiveDutyCycleAuto();
       triggerKY002S();  // Turn off load
-      Serial.println("Load deactivated");
+      Serial.println("Load Deactivated");
 
       digitalWrite(BUILTIN_LED, LOW);
 
@@ -236,32 +170,26 @@ void taskDispatcher(int task) {
   }
 }
 
-
-String getStoredTimestamp() {
-  static String storedTimestamp = "";
-  return storedTimestamp;
-}
-
 void parseString(String str) {
   int delimiterIndex = str.indexOf(',');
   if (delimiterIndex != -1) {
     task = str.substring(0, delimiterIndex).toInt();
     timestamp = str.substring(delimiterIndex + 1);
 
-#ifdef LOG_ON
-    //Serial.printf("Task: %d, Time: %s\n", task, timestamp.c_str());
-#endif
+    Serial.printf("Task: %d, Time: %s\n", task, timestamp.c_str());
+
   }
 }
 
-void setupLoRa() {
-  int state = 0;
+void setupLoRa(){
+  initBoard();
+    // When the power is turned on, a delay is required.
+    delay(1500);
 
-  delay(1000);
-
-  Serial.println("Initializing LoRa...");
-
-  state = radio.begin(
+    // initialize SX126x with default settings
+    Serial.print(F("[SX126x] Initializing ... "));
+    //int state = radio.begin(radioFreq);  //example
+    int state = radio.begin(
     radioFreq,  // 915.0 MHz
     125.0,      // Bandwidth
     7,          // Spreading factor
@@ -272,63 +200,69 @@ void setupLoRa() {
     0.0,  // No TCXO
     true  // LDO mode ON
   );
+    if (state == RADIOLIB_ERR_NONE)
+    {
+        Serial.println(F("success!"));
+    }
+    else
+    {
+        Serial.print(F("failed, code "));
+        Serial.println(state);
+        while (true)
+            ;
+    }
 
-  if (state == RADIOLIB_ERR_NONE) {
-    Serial.printf("LoRa OK: %.1f MHz, %d dBm\n", radioFreq, txPower);
-  } else {
-    Serial.printf("LoRa init failed: %d\n", state);
-    while (true) delay(1000);  // Halt on LoRa failure
-  }
+    // set the function that will be called
+    // when new packet is received
+    radio.setDio1Action(setFlag);
 
-  receivedFlag = false;
-  //interruptEnabled = false;
+    // start listening for LoRa packets
+    Serial.print(F("[SX126x] Starting to listen ... "));
+    //state = radio.startReceive();  //example
+    // Set up the radio for duty cycle receiving
+    state = radio.startReceiveDutyCycleAuto();
+    if (state == RADIOLIB_ERR_NONE)
+    {
+        Serial.println(F("success!"));
+    }
+    else
+    {
+        Serial.print(F("failed, code "));
+        Serial.println(state);
+        while (true)
+            ;
+    }
 
-  radio.setDio1Action(setFlag);
+    // if needed, 'listen' mode can be disabled by calling
+    // any of the following methods:
+    //
+    // radio.standby()
+    // radio.sleep()
+    // radio.transmit();
+    // radio.receive();
+    // radio.readData();
+    // radio.scanChannel();
+}
 
-  state = radio.startReceive();
-  if (state == RADIOLIB_ERR_NONE) {
-    Serial.println("LoRa receiver ready");
-    //interruptEnabled = true;
-  } else {
-    Serial.println("Start receive failed:  " + state);
-  }
+void wakeByTimer(){
 
-  // set the function that will be called
-  // when new packet is received
-  radio.setDio1Action(setFlag);
+  // Set deep sleep timer for 30s test / 120s production
+  esp_sleep_enable_timer_wakeup(30 * 1000000ULL); // 30 seconds in microseconds
+  // or
+  //esp_sleep_enable_timer_wakeup(120 * 1000000ULL); // 120 seconds
 
-  // start listening for LoRa packets
-  Serial.print(F("[SX126x] Starting to listen ... "));
-  state = radio.startReceive();
-  if (state == RADIOLIB_ERR_NONE) {
-    Serial.println(F("success!"));
-    task = 3;
-    taskDispatcher(task);
-    task = 1;
-    taskDispatcher(task);
-  } else {
-    Serial.print(F("failed, code "));
-    Serial.println(state);
-    while (true)
-      ;
-  }
+  // Go to deep sleep - ESP32 wakes itself up after timer
+  esp_deep_sleep_start();
 
-  // check if the flag is set
-  if (receivedFlag) {
-    // reset flag
-    receivedFlag = false;
+  //Turn off load
 
-    // you can read received data as an Arduino String
-    String str;
-    int state = radio.readData(str);
-    parseString(str);
-    taskDispatcher(task);
-  }
+  //gotoSleep --external wake up by LoRa
+
 }
 
 void goToSleep(void) {
 
-  radio.sleep();
+  
 
   Serial.println("=== PREPARING FOR DEEP SLEEP ===");
   Serial.printf("DIO1 pin state before sleep: %d\n", digitalRead(RADIO_DIO1_PIN));
@@ -358,14 +292,8 @@ void goToSleep(void) {
 }
 
 void setup() {
-  initBoard();
-  
   setCpuFrequencyMhz(80);
   Serial.begin(115200);
-
-  Wire.begin();
-
-  I2Cbus2.begin(SDA, SCL);
 
   Serial.println(timestamp);
 
@@ -375,44 +303,33 @@ void setup() {
   // === BASIC PIN SETUP ONLY ===
   pinMode(TRIGGER, OUTPUT);
   pinMode(KY002S_PIN, INPUT);
-  pinMode(ALERT, INPUT);
 
-  if(KY002S_PIN == HIGH){
-    triggerKY002S();
-  }
-
-  if (!ina226.init()) {
-    Serial.println("Failed to init INA226. Check your wiring.");
-    while(1){}
-  }
-
-  delay(100);
-
-  // ina226.setAverage(AVERAGE_1024);
-  // ina226.setConversionTime(CONV_TIME_8244);
-  ina226.setMeasureMode(TRIGGERED);  // choose mode and uncomment for change of default
-  // ina226.setCorrectionFactor(0.95);
-  ina226.enableAlertLatch();
-  ina226.setAlertType(BUS_UNDER, 3.1);
-
-  attachInterrupt(digitalPinToInterrupt(TRIGGER), alert, FALLING);
-
+  triggerKY002S();
+  
   SPI.begin(RADIO_SCLK_PIN, RADIO_MISO_PIN, RADIO_MOSI_PIN);
   
   Serial.print("CPU Frequency: ");
   Serial.print(getCpuFrequencyMhz());
   Serial.println(" MHz");
   
-  // 🔥 NEW: Add power management optimizations
+  // Power management optimizations
   eora_disable_wifi();
   eora_disable_bluetooth();
   eora_disable_adc();
 
   esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
+
+  if (wakeup_reason == ESP_SLEEP_WAKEUP_TIMER){
+    setupLoRa();
+    task = 2;
+    taskDispatcher(task,timestamp);
+  }
   
   if (wakeup_reason == ESP_SLEEP_WAKEUP_EXT0) {
     Serial.println("Woke from LoRa packet");
     setupLoRa();
+    task = 1;
+    taskDispatcher(task, timestamp);
     return;
   }
 
@@ -420,158 +337,84 @@ void setup() {
   if (wakeup_reason == ESP_SLEEP_WAKEUP_UNDEFINED) {
     Serial.println("Power-on reset - initializing and going to sleep");
 
-  delay(50);
+    setupLoRa();
+    return;
 
-  if(KY002S_PIN == HIGH){
-    triggerKY002S();  
-  }
-    
-    int state = radio.begin(radioFreq, 125.0, 7, 7,
-                            RADIOLIB_SX126X_SYNC_WORD_PRIVATE,
-                            txPower, symbols, 0.0, true);
-
-    if (state == RADIOLIB_ERR_NONE) {
-      Serial.printf("LoRa OK: %.1f MHz, %d dBm\n", radioFreq, txPower);
-    } else {
-      Serial.printf("LoRa init failed: %d\n", state);
-      while (true) delay(1000);
-    }
-
-    radio.setDio1Action(setFlag);
-    
     Serial.println("Going to sleep - wake on first packet");
     goToSleep();
   }
 
-  // 🔥 This should rarely execute now
+  // This should rarely execute now
   Serial.println("Unknown wake reason - staying awake");
   // ... original cold boot code as fallback
 }
 
 void loop() {
+  /// check if the flag is set
+    if (receivedFlag)
+    {
+        // disable the interrupt service routine while
+        // processing the data
+        enableInterrupt = false;
 
-  if (event) {
-    ina226.readAndClearFlags();  // reads interrupt and overflow flags and deletes them
-    //getINA226(timestamp);  //displayResults();
-    attachInterrupt(digitalPinToInterrupt(TRIGGER), alert, FALLING);
-    event = false;
-    Serial.println("Battery Alert set for 3.1 Volts");
-    Serial.print("Battery Under-voltage \n\n");
+        // reset flag
+        receivedFlag = false;
 
-    //while (1) {};
-    ina226.readAndClearFlags();
-  }
+        // you can read received data as an Arduino String
+        String str;
+        int state = radio.readData(str);
 
-  if (taskMgr) {
-    taskMgr = false;
-    task = 2;
-    taskDispatcher(task);
-  }
+        // you can also read received data as byte array
+        /*
+          byte byteArr[8];
+          int state = radio.readData(byteArr, 8);
+        */
 
-  // check if the flag is set
-  if (receivedFlag) {
-    // reset flag
-    receivedFlag = false;
+        if (state == RADIOLIB_ERR_NONE)
+        {
+            // packet was successfully received
+            Serial.println(F("[SX126x] Received packet!"));
 
-    // you can read received data as an Arduino String
-    String str;
-    int state = radio.readData(str);
-    parseString(str);
+            // print data of the packet
+            Serial.print(F("[SX126x] Data:\t\t"));
+            Serial.println(str);
+            parseString(str);
+            taskDispatcher(task, timestamp);
 
-    taskDispatcher(task);
-  }
-}
+            // print RSSI (Received Signal Strength Indicator)
+            Serial.print(F("[SX126x] RSSI:\t\t"));
+            Serial.print(radio.getRSSI());
+            Serial.println(F(" dBm"));
 
-void getINA226(String timestamp) {
-  float shuntVoltage_mV = 0.0;
-  float loadVoltage_V = 0.0;
-  float busVoltage_V = 0.0;
-  float current_mA = 0.0;
-  float power_mW = 0.0;
-  ina226.startSingleMeasurement();
-  ina226.readAndClearFlags();
-  shuntVoltage_mV = ina226.getShuntVoltage_mV();
-  busVoltage_V = ina226.getBusVoltage_V();
-  current_mA = ina226.getCurrent_mA();
-  power_mW = ina226.getBusPower();
-  loadVoltage_V = busVoltage_V + (shuntVoltage_mV / 1000);
-  checkForI2cErrors();
+            // print SNR (Signal-to-Noise Ratio)
+            Serial.print(F("[SX126x] SNR:\t\t"));
+            Serial.print(radio.getSNR());
+            Serial.println(F(" dB"));
+        }
+        else if (state == RADIOLIB_ERR_CRC_MISMATCH)
+        {
+            // packet was received, but is malformed
+            Serial.println(F("CRC error!"));
+        }
+        else
+        {
+            // some other error occurred
+            Serial.print(F("failed, code "));
+            Serial.println(state);
+        }
 
-  Serial.println(timestamp);
-  Serial.print("\nShunt Voltage [mV]: ");
-  Serial.println(shuntVoltage_mV);
-  Serial.print("Bus Voltage [V]: ");
-  Serial.println(busVoltage_V);
-  Serial.print("Load Voltage [V]: ");
-  Serial.println(loadVoltage_V);
-  Serial.print("Current[mA]: ");
-  Serial.println(current_mA);
-  Serial.print("Bus Power [mW]: ");
-  Serial.println(power_mW);
+        // put module back to listen mode
+        //radio.startReceive();  //example
+        // Set up the radio for duty cycle receiving
+        //radio.startReceiveDutyCycleAuto();
+        radio.startReceiveDutyCycleAuto();
 
-  if (!ina226.overflow) {
-    Serial.println("Values OK - no overflow");
-  } else {
-    Serial.println("Overflow! Choose higher current range");
-  }
-  Serial.println();
-
-  // Open a "log.txt" for appended writing
-  File log = LittleFS.open("/log.txt", "a");
-
-  if (!log) {
-    Serial.println("file 'log.txt' open failed");
-  }
-
-  log.print(timestamp);
-  log.print(" , ");
-  log.print(shuntVoltage_mV, 3);
-  log.print(" , ");
-  log.print(busVoltage_V, 3);
-  log.print(" , ");
-  log.print(loadVoltage_V, 3);
-  log.print(" , ");
-  log.print(current_mA, 3);
-  log.print(" , ");
-  log.print(power_mW, 3);
-  log.println("");
-  log.close();
-}
-
-void checkForI2cErrors() {
-  byte errorCode = ina226.getI2cErrorCode();
-  if (errorCode) {
-    Serial.print("I2C error: ");
-    Serial.println(errorCode);
-    switch (errorCode) {
-      case 1:
-        Serial.println("Data too long to fit in transmit buffer");
-        break;
-      case 2:
-        Serial.println("Received NACK on transmit of address");
-        break;
-      case 3:
-        Serial.println("Received NACK on transmit of data");
-        break;
-      case 4:
-        Serial.println("Other error");
-        break;
-      case 5:
-        Serial.println("Timeout");
-        break;
-      default:
-        Serial.println("Can't identify the error");
+        // we're ready to receive more packets,
+        // enable interrupt service routine
+        enableInterrupt = true;
     }
-    if (errorCode) {
-      //while (1) {}
-    }
-  }
 }
 
-
-/**
- * Print the reset reason.
- */
 void print_reset_reason(RESET_REASON reason) {
   switch (reason) {
     case 1:
