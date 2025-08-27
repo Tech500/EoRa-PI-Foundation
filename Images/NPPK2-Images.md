@@ -82,4 +82,4 @@ These measurements show different operational modes of what appears to be a low-
 4. **Processing Events**: Extended active periods for data processing/transmission  
 5. **Sensor/Beacon Mode**: Periodic ~11 mA spikes with µA-level average
 
-The measurements demonstrate good power management with clear distinctions between active and sleep states, which is typical for battery-powered IoT or wireless sensor devices.
+The measurements demonstrate good power management with clear distinctions between active and sleep states, LoRa radio in duty cycle mode.
