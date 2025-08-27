@@ -64,7 +64,7 @@ This document contains analysis of power consumption measurements captured using
 
 * **Current Range**: 0-12 mA  
 * **Pattern**: Regular spikes reaching ~11 mA  
-* **Baseline**: Near 0 mA between spikes  
+* **Baseline**: 25.38 µA between spikes  
 * **Measurements**:  
   * Average: 179.48 µA  
   * Max: 11.30 mA  
