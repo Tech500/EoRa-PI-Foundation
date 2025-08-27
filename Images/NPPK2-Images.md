@@ -24,7 +24,7 @@ This document contains analysis of power consumption measurements captured using
 
 ## **Image 1: High Current Periodic Spikes**
 
-![System init\](image1.png) \--\> \<\!-- Uncomment above line and replace 'image1.png' with your actual filename \--\>
+![System init](image1.png) \--\> \<\!-- Uncomment above line and replace 'image1.png' with your actual filename \--\>
 
 * **Current Range**: 35-55 mA  
 * **Pattern**: Regular periodic spikes reaching \~50 mA  
