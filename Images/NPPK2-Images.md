@@ -42,7 +42,7 @@ This document contains analysis of power consumption measurements captured using
   * Max: 10.33 mA  
   * Time: 10.00s  
   * Charge: 1.74 mC  
-* **Analysis**: Optimized low-power operation with consistent periodic activity
+* **Analysis**: Optimized low-power operation with Lora radio, duty cycle "spikes" (listening)
 
 ## **Image 4: Deep Sleep: Spike duration**
 
