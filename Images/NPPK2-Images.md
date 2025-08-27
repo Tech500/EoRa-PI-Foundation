@@ -16,7 +16,7 @@ This document contains analysis of power consumption measurements captured using
   * Charge: 373.54 mC  
 * **Analysis**: Shows periodic high-current activity, likely radio transmission or processing events
 
-## **Image 2: LoRa radio sleep**
+## **Image 2: Task 1:  Turn on load; LoRa radio sleep**
 
 ![Radio sleep function called](image2.png)
 
@@ -30,7 +30,7 @@ This document contains analysis of power consumption measurements captured using
   * Charge: 205.86 µC  
 * **Analysis**: Steady-state current consumption in deep sleep mode, possibly with active low-power peripherals or RTC
 
-## **Image 3: Deep sleep**
+## **Image 3: Task 2:  Turn off load; Deep sleep**
 
 ![Deep Sleep](image3.png)
 
@@ -44,7 +44,7 @@ This document contains analysis of power consumption measurements captured using
   * Charge: 1.74 mC  
 * **Analysis**: Optimized low-power operation with consistent periodic activity
 
-## **Image 4: Spike duration**
+## **Image 4: Deep Sleep: Spike duration**
 
 ![Deep Sleep - Spike duration](image4.png)
 
