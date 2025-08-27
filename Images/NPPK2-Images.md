@@ -52,7 +52,7 @@ This document contains analysis of power consumption measurements captured using
 
 ## **Image 3: Clean Periodic Low Power Pattern**
 
-!\[Deep Sleep\](image3.png) \--\> \<\!-- Uncomment above line and replace 'image3.png' with your actual filename \--\>
+![Deep Sleep\](image3.png) \--\> \<\!-- Uncomment above line and replace 'image3.png' with your actual filename \--\>
 
 * **Current Range**: 0-12 mA  
 * **Pattern**: Very regular, clean spikes  
