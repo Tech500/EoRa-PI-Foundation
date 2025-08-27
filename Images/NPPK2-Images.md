@@ -38,7 +38,7 @@ This document contains analysis of power consumption measurements captured using
 
 ## **Image 2: Medium Current Periodic Pattern**
 
-!\[radio.sleep function called](images\image2.png) \--\> \<\!-- Uncomment above line and replace 'image2.png' with your actual filename \--\>
+!\[radio.sleep function called](Images\image2.png) \--\> \<\!-- Uncomment above line and replace 'image2.png' with your actual filename \--\>
 
 * **Current Range**: 0-12 mA  
 * **Pattern**: Regular spikes reaching \~11 mA  
@@ -52,7 +52,7 @@ This document contains analysis of power consumption measurements captured using
 
 ## **Image 3: Clean Periodic Low Power Pattern**
 
-\!\[Deep Sleep\](images\image3.png) \--\> \<\!-- Uncomment above line and replace 'image3.png' with your actual filename \--\>
+\!\[Deep Sleep\](Images\image3.png) \--\> \<\!-- Uncomment above line and replace 'image3.png' with your actual filename \--\>
 
 * **Current Range**: 0-12 mA  
 * **Pattern**: Very regular, clean spikes  
@@ -66,7 +66,7 @@ This document contains analysis of power consumption measurements captured using
 
 ## **Image 4: Extended Active Period**
 
-!\[Deep Sleep -Spike duration\](images\image4.png) \--\> \<\!-- Uncomment above line and replace 'image4.png' with your actual filename \--\>
+!\[Deep Sleep -Spike duration\](Images\image4.png) \--\> \<\!-- Uncomment above line and replace 'image4.png' with your actual filename \--\>
 
 * **Current Range**: 0-12 mA  
 * **Pattern**: Extended active period (\~910ms) with initial spike and sustained current  
@@ -80,7 +80,7 @@ This document contains analysis of power consumption measurements captured using
 
 ## **Image 5: Continuous High Current with Noise**
 
-!\[Deep Sleep -Between spikes\](images\image5.png) \--\> \<\!-- Uncomment above line and replace 'image5.png' with your actual filename \--\>
+!\[Deep Sleep -Between spikes\](Images\image5.png) \--\> \<\!-- Uncomment above line and replace 'image5.png' with your actual filename \--\>
 
 * **Current Range**: 19.5-22 µA  
 * **Pattern**: Continuous current draw with significant noise/variation  
