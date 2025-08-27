@@ -14,7 +14,7 @@ This document contains analysis of power consumption measurements captured using
   * Max: 50.10 mA  
   * Time: 10.00s  
   * Charge: 373.54 mC  
-* **Analysis**: Shows periodic high-current activity, likely radio transmission or processing events
+* **Analysis**: Shows periodic high-current activity, "EoRa PI" development board initalization.
 
 ## **Image 2: Task 1:  Turn on load; LoRa radio sleep**
 
