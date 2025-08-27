@@ -1,29 +1,6 @@
 # **NPPPK2 Power Measurement Images**
 
-This document contains analysis of power consumption measurements captured using what appears to be a Nordic Power Profiler Kit (NPPPK2) or similar current measurement tool.
-
-## **Image Embedding Options**
-
-**Note**: The images you uploaded can be referenced in markdown using these methods:
-
-### **Method 1: Standard Markdown Image Syntax**
-```markdown
-![Alt text](image_filename.png)
-```
-
-### **Method 2: HTML Image Tag (more control)**
-```html
-<img src="image_filename.png" alt="Description" width="800">
-```
-
-### **Method 3: Reference Links**
-```markdown
-![Alt text][image1]
-
-[image1]: path/to/image.png "Optional title"
-```
-
-**Important**: In this Claude environment, the actual image files from your upload aren't directly accessible by file path in the markdown artifact. However, if you save this markdown file and place it in the same directory as your saved images, the references will work.
+This document contains analysis of power consumption measurements captured using a Nordic Power Profiler Kit (NPPPK2) measurement tool.
 
 ## **Image 1: High Current Periodic Spikes**
 
