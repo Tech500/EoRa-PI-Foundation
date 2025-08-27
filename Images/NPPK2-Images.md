@@ -2,30 +2,7 @@
 
 This document contains analysis of power consumption measurements captured using what appears to be a Nordic Power Profiler Kit (NPPPK2) or similar current measurement tool.
 
-## **Image Embedding Options**
-
-**Note**: The images you uploaded can be referenced in markdown using these methods:
-
-### **Method 1: Standard Markdown Image Syntax**
-```markdown
-![Alt text](image_filename.png)
-```
-
-### **Method 2: HTML Image Tag (more control)**
-```html
-<img src="image_filename.png" alt="Description" width="800">
-```
-
-### **Method 3: Reference Links**
-```markdown
-![Alt text][image1]
-
-[image1]: path/to/image.png "Optional title"
-```
-
-**Important**: In this Claude environment, the actual image files from your upload aren't directly accessible by file path in the markdown artifact. However, if you save this markdown file and place it in the same directory as your saved images, the references will work.
-
-## **Image 1: High Current Periodic Spikes**
+## **Image 1: Sketch initialzation**
 
 ![System init](image1.png)
 
@@ -39,7 +16,7 @@ This document contains analysis of power consumption measurements captured using
   * Charge: 373.54 mC  
 * **Analysis**: Shows periodic high-current activity, likely radio transmission or processing events
 
-## **Image 2: Medium Current Periodic Pattern**
+## **Image 2: Task 1: radio.sleep function called**
 
 ![Radio sleep function called](image2.png)
 
@@ -53,7 +30,7 @@ This document contains analysis of power consumption measurements captured using
   * Charge: 918.93 µC  
 * **Analysis**: Lower power mode with periodic wake-up events, typical of sensor sampling or beacon transmission
 
-## **Image 3: Clean Periodic Low Power Pattern**
+## **Image 3: Task 2:  Timer expired; Deep sleep**
 
 ![Deep Sleep](image3.png)
 
@@ -67,7 +44,7 @@ This document contains analysis of power consumption measurements captured using
   * Charge: 1.74 mC  
 * **Analysis**: Optimized low-power operation with consistent periodic activity
 
-## **Image 4: Extended Active Period**
+## **Image 4: Deep Sleep:  Spike durationd**
 
 ![Deep Sleep - Spike duration](image4.png)
 
@@ -81,7 +58,7 @@ This document contains analysis of power consumption measurements captured using
   * Charge: 81.73 µC  
 * **Analysis**: Shows a longer processing or communication event with initial peak and sustained activity
 
-## **Image 5: Continuous High Current with Noise**
+## **Image 5: Deep Sleep:  Between Spikes**
 
 ![Deep Sleep - Between spikes](image5.png)
 
