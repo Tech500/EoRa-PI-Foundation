@@ -44,7 +44,7 @@ This document contains analysis of power consumption measurements captured using
   * Charge: 1.74 mC  
 * **Analysis**: Optimized low-power operation with consistent periodic activity
 
-## **Image 4: Deep Sleep:  Spike durationd**
+## **Image 4: Deep Sleep:  Spike duration**
 
 ![Deep Sleep - Spike duration](image4.png)
 
