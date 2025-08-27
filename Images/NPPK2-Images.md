@@ -74,7 +74,7 @@ This document contains analysis of power consumption measurements captured using
 
 ## **Summary**
 
-These measurements show different operational modes of what appears to be a low-power embedded device:
+These measurements show different operational modes of Ebyte's:  "EoRa PI" Development Board, [url=https://ebyteiot.com/products/ebyte-oem-odm-eora-s3-900tb-22dbm-7km-mini-low-power-and-long-distance-sx1262-rf-module-lora-module-915mhz?_pos=2&_sid=f499d7703&_ss=r]EoRa-S3-900TB{\url] 
 
 1. **High Activity Mode**: 37-50 mA range with regular transmission/processing  
 2. **Deep Sleep Mode**: Continuous ~20 µA consumption with noise/variation
