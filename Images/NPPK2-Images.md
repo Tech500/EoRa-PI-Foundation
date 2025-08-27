@@ -21,14 +21,14 @@ This document contains analysis of power consumption measurements captured using
 ![Radio sleep function called](image2.png)
 
 * **Current Range**: 19.5-22 µA  
-* **Pattern**: Continuous current draw with significant noise/variation  
+* **Pattern**: Radio Sleep  active; continuous current draw with significant noise/variation  
 * **Baseline**: ~20-21 µA  
 * **Measurements**:  
   * Average: 20.59 µA  
   * Max: 21.58 µA  
   * Time: 10.00s  
   * Charge: 205.86 µC  
-* **Analysis**: Steady-state current consumption in deep sleep mode, possibly with active low-power peripherals or RTC
+* **Analysis**: Steady-state current consumption in deep sleep mode, Radio sleep ends in 120 seconds
 
 ## **Image 3: Task 2:  Turn off load; Deep sleep**
 
@@ -36,7 +36,7 @@ This document contains analysis of power consumption measurements captured using
 
 * **Current Range**: 0-12 mA  
 * **Pattern**: Very regular, clean spikes  
-* **Baseline**: ~0 mA  
+* **Baseline**: 25.38 µA  
 * **Measurements**:  
   * Average: 174.14 µA  
   * Max: 10.33 mA  
@@ -50,7 +50,7 @@ This document contains analysis of power consumption measurements captured using
 
 * **Current Range**: 0-12 mA  
 * **Pattern**: Extended active period (~910ms) with initial spike and sustained current  
-* **Baseline**: 0 mA when inactive  
+* **Baseline**: 25.38 µA when inactive  
 * **Measurements**:  
   * Window Average: 2.17 mA, Max: 11.34 mA  
   * Selection Average: 8.25 mA, Max: 11.34 mA  
