@@ -77,9 +77,10 @@ This document contains analysis of power consumption measurements captured using
 These measurements show different operational modes of Ebyte's:  "EoRa PI" Development Board, [EoRa-S3-900TB]([url](https://ebyteiot.com/products/ebyte-oem-odm-eora-s3-900tb-22dbm-7km-mini-low-power-and-long-distance-sx1262-rf-module-lora-module-915mhz?_pos=2&_sid=f499d7703&_ss=r))
 
 1. **High Activity Mode**: 37-50 mA range with regular transmission/processing  
-2. **Deep Sleep Mode**: Continuous ~20 µA consumption with noise/variation
-3. **Optimized Sleep Mode**: Clean periodic wake-ups with minimal power  
-4. **Processing Events**: Extended active periods for data processing/transmission  
-5. **Sensor/Beacon Mode**: Periodic ~11 mA spikes with µA-level average
+2. **Deep Sleep Mode**: Continuous ~175 µA consumption in Duty Cycle listening mode
+3. **Radio Sleep Mode** 25.38 µA between, load turn on and load turn off; no LoRa radio listening during this interval
+4. **Optimized Sleep Mode**: Clean periodic wake-ups with minimal power  
+5. **Processing Events**: Extended active periods for data processing/transmission  
+6. **Duty Cycle Mode**: Periodic ~11 mA spikes with µA-level average
 
-The measurements demonstrate good power management with clear distinctions between active and sleep states, LoRa radio in duty cycle mode.
+The measurements demonstrate good power management with clear distinctions between active and sleep states
