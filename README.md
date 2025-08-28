@@ -95,7 +95,7 @@ sendCommandPacket();  // Actual command execution
 - **Command**: "1, + timestamp"
 - **Keep Alive**: Only one command (turn ON)
 - **Dead Man's Switch**: Automatic timeout shutdown (2-minute safety)
-- **Timestamp**: NTP-based logging from transmitter
+- **Timestamp**: NTP-based time from transmitter
 
 ### Communication Flow
 1. Web request received → Preamble message switches radio to Duty Cycle mode
