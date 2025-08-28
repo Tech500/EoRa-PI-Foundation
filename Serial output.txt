@@ -1,4 +1,4 @@
-Complete, Reliable, and Repeatable, Remote load controller with  ESP32-S3 and SX1262; LoRa Receiver using the "EoRA PI" Development Board.
+Complete, Reliable, and Repeatable, Remote load controller with  ESP32-S3 and SX1262; LoRa Receiver using the "Ebyte, EoRa PI" Development Board.
 
 18:19:52.354 -> //<------------------- Power on ------------------------
 18:19:52.354 -> 
@@ -147,4 +147,5 @@ Async Web Server request:
   });
   
 */
+
 
