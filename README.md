@@ -26,7 +26,6 @@ Successfully implemented an **ultra-low power LoRa remote control system** using
 #### For Remote Control Applications
 - **KY-002S bistable MOSFET switch** - Enables remote load switching
 - **74HC04N DIP package of Six inverters (two used)** - For unity gain buffering and clean wake signal routing (GPIO33 → RTC_GPIO16)
-- **INA226 I2C current sensor** *(optional)* - For power monitoring and logging
 
 ### Quick Start Guide
 1. **Install Dependencies**
@@ -143,8 +142,6 @@ The transmitter uses **WiFiManager** (by tzapu) for easy network setup without h
 ### Deep Sleep Management
 ```cpp
 void goToSleep(void) {
-
-  radio.sleep();
 
   Serial.println("=== PREPARING FOR DEEP SLEEP ===");
   Serial.printf("DIO1 pin state before sleep: %d\n", digitalRead(RADIO_DIO1_PIN));
