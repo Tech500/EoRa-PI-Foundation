@@ -21,6 +21,7 @@ Successfully implemented an **ultra-low power LoRa remote control system** using
 - **Ebyte EoRa-S3-900TB (EoRa PI)** - Pair of transceivers for your country's ISM frequency band
 - **3000 mAh LiPo Battery** - JST-2 1.25 SH Series connector
 - **Development Environment** - [Arduino IDE 2.3.6](https://www.arduino.cc/en/software)
+- **Compiled with 2.0.17 Board Manager**
 - **Choose Board** - "ESP32S3 Development Module"   
 
 #### For Remote Control Applications
