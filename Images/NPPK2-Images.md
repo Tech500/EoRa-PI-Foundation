@@ -1,6 +1,6 @@
 # **NPPK II Power Measurement Images**
 
-This document contains analysis of power consumption measurements captured using a Nordic Power Profiler Kit (NPPPK2) measurement tool.
+This document contains analysis of power consumption measurements captured using a Nordic Power Profiler Kit (NPPPK II) measurement tool.
 
 ## **Image 1:  Initalization**
 
