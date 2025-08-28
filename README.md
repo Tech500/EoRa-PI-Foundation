@@ -98,7 +98,7 @@ sendCommandPacket();  // Actual command execution
 - **Timestamp**: NTP-based logging from transmitter
 
 ### Communication Flow
-1. Web request received → Preamble message switches radio to receive mode
+1. Web request received → Preamble message switches radio to Duty Cycle mode
 2. ESP32-S3 awakens from deep sleep
 3. Transmitter sends "1,timestamp" packet
 4. Receiver processes command → Resets 2-minute safety timer
