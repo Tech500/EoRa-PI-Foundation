@@ -176,7 +176,7 @@ void goToSleep(void) {
 ## 📊 Performance Results
 
 ### Power Consumption
-- **Deep Sleep**: ~23 uA, Average current ~175 µA (ESP32-S3) + duty cycle radio consumption
+- **Deep Sleep**: ~23 µA, Average current ~175 µA (ESP32-S3) + duty cycle radio consumption
 - **Active Time**: <5% duty cycle during command execution
 - **Wake-up Time**: <2 seconds
 - **Command Processing**: Immediate response
