@@ -79,7 +79,7 @@ Sync Word: RADIOLIB_SX126X_SYNC_WORD_PRIVATE
 ## 📡 Communication Protocol
 
 ### Wake-On-Radio System
-Implemented a **two-packet protocol** for reliable one-transmission operation:
+Implemented a **two-packet protocol** for reliable one-transmission operation:  
 
 1. **WOR (Wake-On-Radio) packet** → Wakes ESP32 → Initializes duty cycle mode
 2. **Payload packet** → Received by duty cycle radio → Executes command immediately
