@@ -135,13 +135,16 @@ Async Web Server request:
 
   server.on("/relay", HTTP_GET, [](AsyncWebServerRequest *request) {
     getDateTime();
-    String timestamp = dtStamp;  // Correct: update timestamp
+    timestamp = dtStamp; 
     String option = "1";
-    String payload = option + "," + timestamp;
+    String payload = "1," + timestamp;
     Serial.println("\n=== WEB REQUEST RECEIVED ===");
     Serial.printf("Sending WOR payload: %s\n", payload.c_str());
-    sendLoRaWOR(payload);  // Send WOR-style with timestamp
+    sendWOR();  // Send WOR-style preamble
+    delay(250);
+    sendLoRaPayload(payload);  //Sending command and timestamp
     request->send(200, "text/plain", "Sent WOR payload: " + payload);
   });
   
 */
+
