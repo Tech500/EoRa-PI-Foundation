@@ -79,7 +79,7 @@ These measurements show different operational modes of Ebyte's:  "EoRa PI" Devel
 
 1. **High Activity Mode**: 37-50 mA range with regular transmission/processing  
 2. **Deep Sleep Mode**: Continuous ~175 µA consumption in Duty Cycle listening mode
-3. **Radio Sleep Mode** 25.38 µA between, load turn on and load turn off; no LoRa radio listening during this interval
+3. **Radio Sleep Mode** 25.38 µA between "spikes".  Load turn on and load turn off; no LoRa radio listening during this interval
 4. **Optimized Sleep Mode**: Clean periodic wake-ups with minimal power  
 5. **Processing Events**: Extended active periods for data processing/transmission  
 6. **Duty Cycle Mode**: Periodic ~11 mA spikes with µA-level average
