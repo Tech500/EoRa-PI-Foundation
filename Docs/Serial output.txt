@@ -1,65 +1,250 @@
-03:22:05.354 -> 
-03:22:05.354 -> 
-03:22:05.354 -> FS init: ok
-03:22:05.354 -> CPU Frequency: 80 MHz
-03:22:05.354 -> Power-on reset - initializing and going to sleep
-03:22:05.354 -> initBoard
-03:22:06.391 -> [SX126x] Initializing ... success!
-03:22:06.424 -> [SX126x] Starting to listen ... success!
-03:22:14.068 -> [SX126x] Received packet!
-03:22:14.068 -> [SX126x] Data:		3, WOR--1234567890qwerty
-03:22:14.068 -> Task: 3, Time:  WOR--1234567890qwerty
-03:22:14.068 -> ✅ Wake on Radio
-03:22:14.068 -> [SX126x] RSSI:		-42.00 dBm
-03:22:14.068 -> [SX126x] SNR:		11.75 dB
-03:22:15.013 -> [SX126x] Received packet!
-03:22:15.013 -> [SX126x] Data:		1,Tue-08-26-2025--03:22:13
-03:22:15.046 -> Task: 1, Time: Tue-08-26-2025--03:22:13
-03:22:15.046 -> ✅ Task 1:  Timer Started
-03:22:15.046 -> Tue-08-26-2025--03:22:13
-03:22:15.046 -> LoRa radio.sleep() called
-03:22:15.144 -> Load Activated
-03:22:46.613 -> 
-03:22:46.613 -> 
-03:22:46.613 -> FS init: ok
-03:22:46.613 -> CPU Frequency: 80 MHz
-03:22:46.613 -> initBoard
-03:22:46.613 -> [SX126x] Initializing ... success!
-03:22:46.645 -> [SX126x] Starting to listen ... success!
-03:22:46.645 -> ✅ Task 2:  Timer Expired
-03:22:46.744 -> Load Deactivated
-03:22:46.744 -> === PREPARING FOR DEEP SLEEP ===
-03:22:46.744 -> DIO1 pin state before sleep: 0
-03:22:46.744 -> Wake pin (GPIO16) state before sleep: 0
-03:22:46.744 -> DIO1 pin state before sleep: 0
-03:22:46.744 -> Wake pin (GPIO16) state before sleep: 0
-03:22:46.744 -> Configuring RTC GPIO and deep sleep wake-up...
-03:22:46.744 -> ✅ Going to deep sleep now...
-03:22:46.744 -> Wake-up sources: DIO1 pin reroute
-03:24:38.898 -> 
-03:24:38.898 -> 
-03:24:38.898 -> FS init: ok
-03:24:38.898 -> CPU Frequency: 80 MHz
-03:24:38.898 -> Woke from LoRa packet
-03:24:38.898 -> initBoard
-03:24:38.898 -> [SX126x] Initializing ... success!
-03:24:38.929 -> [SX126x] Starting to listen ... success!
-03:24:38.929 -> ✅ Task 1:  Timer Started
-03:24:38.929 -> 
-03:24:38.929 -> LoRa radio.sleep() called
-03:24:39.026 -> Load Activated
-03:25:10.666 -> 
-03:25:10.666 -> 
-03:25:10.666 -> FS init: ok
-03:25:10.666 -> CPU Frequency: 80 MHz
-03:25:10.666 -> initBoard
-03:25:10.666 -> [SX126x] Initializing ... success!
-03:25:10.666 -> [SX126x] Starting to listen ... success!
-03:25:10.701 -> ✅ Task 2:  Timer Expired
-03:25:10.799 -> Load Deactivated
-03:25:10.799 -> === PREPARING FOR DEEP SLEEP ===
-03:25:10.799 -> DIO1 pin state before sleep: 0
-03:25:10.799 -> Wake pin (GPIO16) state before sleep: 0
-03:25:10.799 -> Configuring RTC GPIO and deep sleep wake-up...
-03:25:10.799 -> ✅ Going to deep sleep now...
-03:25:10.799 -> Wake-up sources: DIO1 pin reroute
+18:19:52.354 -> //<------------------- Power on ------------------------
+18:19:52.354 -> 
+18:19:52.354 -> FS init: ok
+18:19:52.354 -> CPU Frequency: 80 MHz  //<------------------ Power saving by slowing microcontroller
+18:19:52.354 -> initBoard  //<------------------------------ Init caused by reset reason ESP_RST_POWERON
+18:19:53.360 -> [SX126x] Initializing ... success!
+18:19:53.391 -> [SX126x] Starting to listen ... success!  //<--------- Need to establish listening duty cycle
+18:19:53.391 -> 
+18:19:53.391 -> === PREPARING FOR DEEP SLEEP ===
+18:19:53.391 -> DIO1 pin state before sleep: 0
+18:19:53.391 -> Wake pin (GPIO16) state before sleep: 0
+18:19:53.391 -> Configuring RTC GPIO and deep sleep wake-up...
+18:19:53.391 -> ✅ Going to deep sleep now...  //<--------------- ESP32-S3 goes to Deep Sleep
+18:19:53.391 -> Wake-up sources: DIO1 pin reroute
+18:20:17.454 -> ✅ Woke from LoRa packet //<---------------------- Preamble received --DIO1 Interrupt received 
+18:20:17.454 -> initBoard
+18:20:17.454 -> [SX126x] Initializing ... success!
+18:20:17.487 -> [SX126x] Starting to listen ... success!
+18:20:17.487 -> 
+18:20:17.487 -> ✅ Task 1:  Timer Started  // <------------------ Second packet of single transmisson.  ParsedString(str) processed
+18:20:17.487 -> Load Activated  //<------------------------------- Load switched on
+18:20:17.487 -> LoRa radio.sleep() called  //<-------------------- Lora radio put into radio.sleep().  External0 on timer set
+18:20:49.223 -> 
+18:20:49.223 -> 
+18:20:49.223 -> FS init: ok  //<---------------------------------- Init cause by wake up reson ESP_SLEEP_WAKEUP_TIMER
+18:20:49.223 -> CPU Frequency: 80 MHz
+18:20:49.223 -> initBoard
+18:20:49.223 -> [SX126x] Initializing ... success!
+18:20:49.257 -> [SX126x] Starting to listen ... success!
+18:20:49.257 -> 
+18:20:49.257 -> ✅ Task 2:  Timer Expired  //<-------------------- Wake up reason sets task = 2; calls taskDispatcher
+18:20:49.353 -> Load Deactivated  //<------------------------------ Load switched off ESP32-S3 goes to Deep Sleep 
+18:20:49.353 -> 
+18:20:49.353 -> === PREPARING FOR DEEP SLEEP ===
+18:20:49.353 -> DIO1 pin state before sleep: 0
+18:20:49.353 -> Wake pin (GPIO16) state before sleep: 0
+18:20:49.353 -> Configuring RTC GPIO and deep sleep wake-up...
+18:20:49.353 -> ✅ Going to deep sleep now...  //<------------------ ESP32-S3 goes to Deep Sleep
+18:20:49.353 -> Wake-up sources: DIO1 pin reroute  //<-------------- Awaits next web request; arriving at unknown time, low demand
+18:21:12.744 -> 
+18:21:12.744 -> 
+18:21:12.744 -> FS init: ok
+18:21:12.744 -> CPU Frequency: 80 MHz
+18:21:12.744 -> ✅ Woke from LoRa packet  //<------------------------ Preamble received --DIO1 Interrupt received
+18:21:12.744 -> initBoard
+18:21:12.744 -> [SX126x] Initializing ... success!
+18:21:12.776 -> [SX126x] Starting to listen ... success!  //<-------- LoRa radio init to Duty Cycle listening
+18:21:12.776 -> 
+18:21:12.776 -> 
+18:21:12.776 -> ✅ Task 1:  Timer Started  //<----------------------- Cycle repeats ever web request
+18:21:12.776 -> Load Activated
+18:21:12.776 -> LoRa radio.sleep() called
+18:21:44.526 -> 
+18:21:44.526 -> 
+18:21:44.526 -> FS init: ok
+18:21:44.526 -> CPU Frequency: 80 MHz
+18:21:44.526 -> initBoard
+18:21:44.526 -> [SX126x] Initializing ... success!
+18:21:44.526 -> [SX126x] Starting to listen ... success!
+18:21:44.559 -> 
+18:21:44.559 -> ✅ Task 2:  Timer Expired
+18:21:44.656 -> Load Deactivated
+18:21:44.656 -> 
+18:21:44.656 -> === PREPARING FOR DEEP SLEEP ===
+18:21:44.656 -> DIO1 pin state before sleep: 0
+18:21:44.656 -> Wake pin (GPIO16) state before sleep: 0
+18:21:44.656 -> Configuring RTC GPIO and deep sleep wake-up...
+18:21:44.656 -> ✅ Going to deep sleep now...
+18:21:44.656 -> Wake-up sources: DIO1 pin reroute
+18:23:29.158 -> 
+18:23:29.158 -> 
+18:23:29.158 -> FS init: ok
+18:23:29.158 -> CPU Frequency: 80 MHz
+18:23:29.158 -> ✅ Woke from LoRa packet
+18:23:29.158 -> initBoard
+18:23:29.158 -> [SX126x] Initializing ... success!
+18:23:29.190 -> [SX126x] Starting to listen ... success!
+18:23:29.190 -> 
+18:23:29.190 -> ✅ Task 1:  Timer Started  //<----------------------- Cycle repeats ever web request
+18:23:29.190 -> Load Activated
+18:23:29.190 -> LoRa radio.sleep() called
+18:24:00.901 -> 
+18:24:00.901 -> 
+18:24:00.901 -> FS init: ok
+18:24:00.901 -> CPU Frequency: 80 MHz
+18:24:00.901 -> initBoard
+18:24:00.901 -> [SX126x] Initializing ... success!
+18:24:00.934 -> [SX126x] Starting to listen ... success!
+18:24:00.934 -> 
+18:24:00.934 -> ✅ Task 2:  Timer Expired
+18:24:01.031 -> Load Deactivated
+18:24:01.031 -> 
+18:24:01.031 -> === PREPARING FOR DEEP SLEEP ===
+18:24:01.031 -> DIO1 pin state before sleep: 0
+18:24:01.031 -> Wake pin (GPIO16) state before sleep: 0
+18:24:01.031 -> Configuring RTC GPIO and deep sleep wake-up...
+18:24:01.031 -> ✅ Going to deep sleep now...
+18:24:01.031 -> Wake-up sources: DIO1 pin reroute
+18:25:35.097 -> 
+18:25:35.097 -> 
+18:25:35.097 -> FS init: ok
+18:25:35.097 -> CPU Frequency: 80 MHz
+18:25:35.097 -> ✅ Woke from LoRa packet
+18:25:35.097 -> initBoard
+18:25:35.097 -> [SX126x] Initializing ... success!
+18:25:35.129 -> [SX126x] Starting to listen ... success!
+18:25:35.129 -> 
+18:25:35.129 -> ✅ Task 1:  Timer Started  //<----------------------- Cycle repeats ever web request
+18:25:35.129 -> Load Activated
+18:25:35.129 -> LoRa radio.sleep() called
+18:26:06.886 -> 
+18:26:06.886 -> 
+18:26:06.886 -> FS init: ok
+18:26:06.886 -> CPU Frequency: 80 MHz
+18:26:06.886 -> initBoard
+18:26:06.886 -> [SX126x] Initializing ... success!
+18:26:06.919 -> [SX126x] Starting to listen ... success!
+18:26:06.919 -> 
+18:26:06.919 -> ✅ Task 2:  Timer Expired
+18:26:07.018 -> Load Deactivated
+18:26:07.018 -> 
+18:26:07.018 -> === PREPARING FOR DEEP SLEEP ===
+18:26:07.018 -> DIO1 pin state before sleep: 0
+18:26:07.018 -> Wake pin (GPIO16) state before sleep: 0
+18:26:07.018 -> Configuring RTC GPIO and deep sleep wake-up...
+18:26:07.018 -> ✅ Going to deep sleep now...
+18:26:07.018 -> Wake-up sources: DIO1 pin reroute
+
+
+Async Web Server request:
+
+/*
+
+```
+
+AsyncWebServer Request, sendsendWOR, and sendLoRaPayload
+
+  server.on("/relay", HTTP_GET, [](AsyncWebServerRequest *request) {
+    getDateTime();
+    timestamp = dtStamp; 
+    String option = "1";
+    String payload = "1," + timestamp;
+    Serial.println("\n=== WEB REQUEST RECEIVED ===");
+    Serial.printf("Sending WOR payload: %s\n", payload.c_str());
+    sendWOR();  // Send WOR-style preamble
+    delay(250);
+    sendLoRaPayload(payload);  //Sending command and timestamp
+    request->send(200, "text/plain", "Sent WOR payload: " + payload);
+  });
+
+
+
+void sendWOR() {
+  String wakeonRadio = "3, WOR--1234567890qwerty";
+  int state;
+  unsigned long transmitTime = 0;
+  Serial.println("=== STARTING TRANSMISSION ===");
+  Serial.printf("Payload: %s\n", wakeonRadio.c_str());
+  Serial.printf("Payload length: %d bytes\n", wakeonRadio.length());
+  Serial.printf("Preamble length: %d symbols\n", LORA_PREAMBLE_LENGTH);
+  Serial.printf("Spreading Factor: %d\n", LORA_SPREADING_FACTOR);
+
+  // Send payload transmission
+  unsigned long startTime = millis();
+  state = radio.transmit(wakeonRadio);
+  transmitTime = millis() - startTime;
+
+  delay(100);
+  
+  if (state == RADIOLIB_ERR_NONE) {
+    Serial.println("Packet transmitted successfully!");
+    Serial.printf("Transmission time: %lu ms\n", transmitTime);
+    Serial.printf("Data rate: %.2f bps\n", (wakeonRadio.length() * 8.0) / (transmitTime / 1000.0));
+    Serial.println("=== TRANSMISSION COMPLETE ===");
+  } else {
+    Serial.printf("Transmission failed! Error code: %d\n", state);
+    
+    // Decode common error codes
+    switch(state) {
+      case RADIOLIB_ERR_PACKET_TOO_LONG:
+        Serial.println("Error: Packet too long");
+        break;
+      case RADIOLIB_ERR_TX_TIMEOUT:
+        Serial.println("Error: Transmission timeout");
+        break;
+      case RADIOLIB_ERR_CHIP_NOT_FOUND:
+        Serial.println("Error: Radio chip not responding");
+        break;
+      default:
+        Serial.println("Check RadioLib documentation for error code details");
+    }
+  }
+  
+  Serial.println();
+}
+
+
+
+void sendLoRaPayload(String payload) {
+  int state;
+  unsigned long transmitTime = 0;
+  Serial.println("=== STARTING TRANSMISSION ===");
+  Serial.printf("Payload: %s\n", payload.c_str());
+  Serial.printf("Payload length: %d bytes\n", payload.length());
+  Serial.printf("Preamble length: %d symbols\n", LORA_PREAMBLE_LENGTH);
+  Serial.printf("Spreading Factor: %d\n", LORA_SPREADING_FACTOR);
+
+  // Send payload transmission
+  unsigned long startTime = millis();
+  state = radio.transmit(payload);
+  transmitTime = millis() - startTime;
+ 
+ delay(600);
+
+  if (state == RADIOLIB_ERR_NONE) {
+    Serial.println("Packet transmitted successfully!");
+    Serial.printf("Transmission time: %lu ms\n", transmitTime);
+    Serial.printf("Data rate: %.2f bps\n", (payload.length() * 8.0) / (transmitTime / 1000.0));
+    Serial.println("=== TRANSMISSION COMPLETE ===");
+  } else {
+    Serial.printf("Transmission failed! Error code: %d\n", state);
+    
+    // Decode common error codes
+    switch(state) {
+      case RADIOLIB_ERR_PACKET_TOO_LONG:
+        Serial.println("Error: Packet too long");
+        break;
+      case RADIOLIB_ERR_TX_TIMEOUT:
+        Serial.println("Error: Transmission timeout");
+        break;
+      case RADIOLIB_ERR_CHIP_NOT_FOUND:
+        Serial.println("Error: Radio chip not responding");
+        break;
+      default:
+        Serial.println("Check RadioLib documentation for error code details");
+    }
+  }
+  
+  Serial.println();
+}
+
+```
+
+
+
+
+
+
+  
+*/
