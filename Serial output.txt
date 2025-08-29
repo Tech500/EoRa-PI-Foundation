@@ -128,11 +128,6 @@ Complete, Reliable, and Repeatable, Remote load controller with  ESP32-S3 and SX
 18:26:07.018 -> ✅ Going to deep sleep now...
 18:26:07.018 -> Wake-up sources: DIO1 pin reroute
 
-
-Async Web Server request:
-
-/*
-
 ```
 
 AsyncWebServer Request, sendsendWOR, and sendLoRaPayload --one Web click; WOR preamble and payload
@@ -242,15 +237,3 @@ void sendLoRaPayload(String payload) {
 }
 
 ```
-
-
-
-
-
-
-  
-*/
-
-
-
-
