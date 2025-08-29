@@ -130,6 +130,21 @@ Complete, Reliable, and Repeatable, Remote load controller with  ESP32-S3 and SX
 
 ```
 
+Duty Cycle Calculation:
+
+Average current: 175µA
+Sleep current: 25.38µA
+Active current: 11,000µA (11mA)
+Duty cycle ≈ (175 - 25.38) / (11,000 - 25.38) ≈ 1.36%
+
+Achieving a very low ~1.4% duty cycle, which is excellent for battery life.
+Your interrupt-driven system is working well:
+
+98.6% of time in deep sleep (25.38µA)
+1.4% of time active receiving (11mA)
+Clean transitions with no lingering current
+
+
 AsyncWebServer Request, sendsendWOR, and sendLoRaPayload --one Web click; WOR preamble and payload
 
   server.on("/relay", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -237,3 +252,4 @@ void sendLoRaPayload(String payload) {
 }
 
 ```
+
