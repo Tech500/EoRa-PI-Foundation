@@ -49,7 +49,7 @@ Complete, Reliable, and Repeatable, Remote load controller with  ESP32-S3 and SX
 18:21:12.776 -> [SX126x] Starting to listen ... success!  //<-------- LoRa radio init to Duty Cycle listening
 18:21:12.776 -> 
 18:21:12.776 -> 
-18:21:12.776 -> ✅ Task 1:  Timer Started  //<----------------------- Cycle repeats ever web request
+18:21:12.776 -> ✅ Task 1:  Timer Started  //<----------------------- Cycle repeats every web request
 18:21:12.776 -> Load Activated
 18:21:12.776 -> LoRa radio.sleep() called
 18:21:44.526 -> 
@@ -78,7 +78,7 @@ Complete, Reliable, and Repeatable, Remote load controller with  ESP32-S3 and SX
 18:23:29.158 -> [SX126x] Initializing ... success!
 18:23:29.190 -> [SX126x] Starting to listen ... success!
 18:23:29.190 -> 
-18:23:29.190 -> ✅ Task 1:  Timer Started  //<----------------------- Cycle repeats ever web request
+18:23:29.190 -> ✅ Task 1:  Timer Started  //<----------------------- Cycle repeats every web request
 18:23:29.190 -> Load Activated
 18:23:29.190 -> LoRa radio.sleep() called
 18:24:00.901 -> 
@@ -107,7 +107,7 @@ Complete, Reliable, and Repeatable, Remote load controller with  ESP32-S3 and SX
 18:25:35.097 -> [SX126x] Initializing ... success!
 18:25:35.129 -> [SX126x] Starting to listen ... success!
 18:25:35.129 -> 
-18:25:35.129 -> ✅ Task 1:  Timer Started  //<----------------------- Cycle repeats ever web request
+18:25:35.129 -> ✅ Task 1:  Timer Started  //<----------------------- Cycle repeats every web request
 18:25:35.129 -> Load Activated
 18:25:35.129 -> LoRa radio.sleep() called
 18:26:06.886 -> 
@@ -250,6 +250,7 @@ void sendLoRaPayload(String payload) {
 
   
 */
+
 
 
 
