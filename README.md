@@ -175,7 +175,7 @@ void goToSleep(void) {
 
 ## 📊 Performance Results
 
-###Duty Cycle Calculation:
+### Duty Cycle Calculation:
 
 - **Average current**: 175µA
 - **Sleep current**: 25.38µA
