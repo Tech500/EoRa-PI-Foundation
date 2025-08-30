@@ -175,6 +175,20 @@ void goToSleep(void) {
 
 ## 📊 Performance Results
 
+###Duty Cycle Calculation:
+
+- **Average current**: 175µA
+- **Sleep current**: 25.38µA
+- **Active current**: 11,000µA (11mA)
+- **Duty cycle** ≈ (175 - 25.38) / (11,000 - 25.38) ≈ 1.36%
+
+- **Achieving** a very low ~1.4% duty cycle, which is excellent for battery life.
+- **Interrupt-driven** system is working well:
+
+- **98.6%** of time in deep sleep (25.38µA)
+- **1.4%** of time active receiving (11mA)
+- **Clean transitions** with no lingering current
+
 ### Power Consumption
 - **Deep Sleep**: ~23 µA, Average current ~175 µA (ESP32-S3) + duty cycle radio consumption
 - **Active Time**: <5% duty cycle during command execution
